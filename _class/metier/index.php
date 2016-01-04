@@ -5,4 +5,4 @@
  * @copyright 2015 - 2016 OpenBooking Group
  */
 
-   //Todo : Routeur pour chacun des appels à l'API
+    throw new Exception("Access denied");

@@ -4,5 +4,3 @@
  * Project: OpenBooking
  * @copyright 2015 - 2016 OpenBooking Group
  */
-
-   //Todo : Routeur pour chacun des appels à l'API
