@@ -4,3 +4,24 @@
  * Project: OpenBooking
  * @copyright 2015 - 2016 OpenBooking Group
  */
+
+
+$iniConf = parse_ini_file(dirname(__FILE__)."/../conf.ini", true);
+$mysqlConf  = $iniConf['MySQL'];
+
+try {
+    $dbServer   = $mysqlConf['dbHost'];
+    $dbName     = $mysqlConf['dbName'];
+    $dbUser     = $mysqlConf['dbUser'];
+    $dbPass     = $mysqlConf['dbPass'];
+
+    $dns = "mysql:host=" . $dbServer . ";dbname=" . $dbName;
+
+    $GLOBALS["pdo"] =  new PDO($dns, $dbUser, $dbPass);
+
+    $GLOBALS["pdo"]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+} catch (Exception $e){
+    error_log("Mysql Connection exception : " . $e->getMessage());
+    throw new Exception("Mysql Connection exception : " . $e->getMessage());
+}
