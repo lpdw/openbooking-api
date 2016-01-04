@@ -13,7 +13,7 @@ try {
     $dbServer   = $mysqlConf['dbHost'];
     $dbName     = $mysqlConf['dbName'];
     $dbUser     = $mysqlConf['dbUser'];
-    $dbPass     = $mysqlConf['dbPass'];
+    $dbPass     = $mysqlConf['dbPassword'];
 
     $dns = "mysql:host=" . $dbServer . ";dbname=" . $dbName;
 
