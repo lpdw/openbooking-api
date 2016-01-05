@@ -20,6 +20,8 @@ Class Event{
     private $open_to_registration;
     private $cancelled;
 
+    private $pdo;
+
     /**
      * @return mixed
      */
@@ -188,7 +190,103 @@ Class Event{
         $this->cancelled = $cancelled;
     }
 
-    public function __construct(){
+    /**
+     * Event constructor.
+     * @param array $param
+     * @throw Exception
+     */
+    public function __construct($id)
+    {
+        try{
+            $this->pdo = $GLOBALS["pdo"];
+            $res = $this->getEvent($id);
 
+            $this->id = $res->id;
+            $this->name = $res->name;
+            $this->description = $res->description;
+            $this->localisation = $res->localisation;
+            $this->date = $res->date;
+            $this->participants_max = $res->participants_max;
+            $this->organizer = $res->organizer;
+            $this->organizer_email = $res->organizer_email;
+            $this->creation_date = $res->creation_date;
+            $this->open_to_registration = $res->open_to_registration;
+            $this->cancelled = $res->cancelled;
+        } catch (Exception $e) {
+            return array("code" => $e->getCode(), "message" => $e->getMessage());
+        }
+    }
+
+    private function getEvent($id)
+    {
+        $sql = "SELECT * FROM ob_event WHERE id=:id";
+        $req = $this->pdo->prepare($sql);
+        $req->bindParam(":id", $id);
+        $req->setFetchMode(pdo::FETCH_OBJ);
+        $req->execute();
+        $res = $req->fetch();
+
+        if(count($res->id) == 0){
+            throw new Exception("Exception : Unknown participant");
+        }
+        return $res;
+    }
+
+    public static function add($param)
+    {
+        try{
+            $pdo = $GLOBALS["pdo"];
+            $sql = "INSERT INTO ob_event (name,
+                                          description,
+                                          localisation,
+                                          date,
+                                          participants_max,
+                                          organizer,
+                                          organizer_email,
+                                          open_to_registration,
+                                          cancelled)
+                    VALUES (:name,
+                            :description,
+                            :localisation,
+                            :date,
+                            :participants_max,
+                            :organizer,
+                            :organizer_email,
+                            :open_to_registration,
+                            :cancelled)";
+
+            $req = $pdo->prepare($sql);
+
+            $req->bindParam(':name', $param["name"]);
+            $req->bindParam(':description', $param["description"]);
+            $req->bindParam(':localisation', $param["localisation"]);
+            $req->bindParam(':date', $param["date"]);
+            $req->bindParam(':participants_max', $param["participants_max"]);
+            $req->bindParam(':organizer', $param["organizer"]);
+            $req->bindParam(':organizer_email', $param["organizer_email"]);
+            $req->bindParam('open_to_registration', $param["open_to_registration"]);
+            $req->bindParam('cancelled', $param["cancelled"]);
+
+            $req->execute();
+            return array("code" => 0, "message" => "ok");
+
+        } catch (Exception $e) {
+            return array("code" => $e->getCode(), "message" => $e->getMessage());
+        }
+
+    }
+
+    public function cancelEvent()
+    {
+        try{
+            $sql="UPDATE ob_event SET cancelled=1 WHERE id=:id";
+            $req = $this->pdo->prepare($sql);
+            $req->bindParam(":id", $this->id);
+            $req->execute();
+            return array("code" => 0, "message" => "ok");
+
+        } catch (Exception $e){
+            return array("code" => $e->getCode(), "message" => $e->getMessage());
+        }
     }
 }
