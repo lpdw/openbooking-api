@@ -107,16 +107,19 @@ class Participant
             $req->execute();
             $req->setFetchMode(PDO::FETCH_OBJ);
             $res = $req->fetch();
-            if (!isset($res->id)) {
-                throw new LoginException("Access denied, unknow user");
+            if (isset($res->id) && $res->id > 0) {
+                $this->id = $res->id;
+                $this->first_name = $res->first_name;
+                $this->last_name = $res->last_name;
+                $this->email = $res->email;
+                $this->registration_date = $res->registration_date;
+                $this->comments = $res->comments;
+                $this->status = $res->status;
+            }else{
+                throw new LoginException("Access denied, bad credentials");
             }
-            $this->id = $res->id;
-            $this->first_name = $res->first_name;
-            $this->last_name = $res->last_name;
-            $this->email = $res->email;
-            $this->registration_date = $res->registration_date;
-            $this->comments = $res->comments;
-            $this->status = $res->status;
+        } catch (LoginException $e) {
+            throw new LoginException($e->getMessage());
         } catch (Exception $e) {
             throw new UnknowErrorException("Unknow error");
         }
