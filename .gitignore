@@ -212,3 +212,7 @@ fabric.properties
 ### NotepadPP ###
 # Notepad++ backups #
 *.bak
+
+
+vendor/*
+phpDoc/*
