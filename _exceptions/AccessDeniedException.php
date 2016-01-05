@@ -10,19 +10,19 @@ namespace OpenBooking\Exceptions;
 use \Exception;
 
 /**
- * Class LoginException
+ * Class AccessDeniedException
  * @package OpenBooking\Exceptions
  */
 
-class LoginException extends Exception
+class AccessDeniedException extends Exception
 {
     /**
-     * LoginException constructor.
+     * AccessDeniedException constructor.
      * @param string $message
      * @param int $code
      * @param Exception|null $previous
      */
-    public function __construct($message = "Login error, please check ", $code = -3, Exception $previous = null) {
+    public function __construct($message = "Access denied", $code = -7, Exception $previous = null) {
         parent::__construct($message, $code, $previous);
     }
 
