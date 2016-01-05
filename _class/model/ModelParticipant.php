@@ -7,11 +7,59 @@
  * @copyright 2015 - 2016 OpenBooking Group
  */
 
+namespace OpenBooking\model;
+/**
+ * Class ModelParticipant
+ * @package OpenBooking\model\ModelParticipant
+ */
+
 Class ModelParticipant{
+
+    /**
+     * Participant ID
+     *
+     * @var int
+     */
     public $id;
-    public $id_event;
-    public $name;
+
+    /**
+     * Participant first name
+     * @var string
+     */
+    public $first_name;
+
+    /**
+     * Participant last name
+     * @var string
+     */
+    public $last_name;
+
+    /**
+     * Participant email
+     * @var string
+     */
     public $email;
+
+    /**
+     * Participant registration timestamp
+     * @var int Timestamp required
+     */
     public $registration_date;
-    public $cancelled;
+
+    /**
+     * Comments about participant
+     * @var string
+     */
+    public $comments;
+
+    /**
+     * Participant status.
+     *
+     * If status == ban, user can connect but can't participate to an event. He need to contact an administrator.
+     *
+     * @var string Possible values  : 'verified', 'unverified', 'ban'
+     */
+    public $status;
+
+
 }
