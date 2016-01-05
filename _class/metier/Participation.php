@@ -115,7 +115,7 @@ class Participation
      * Get the participations infos
      * @return model\ModelParticipation
      */
-    public function getParticipation(){
+    public function get(){
         $res = new model\ModelParticipation();
         $res->id                = $this->id;
         $res->id_event          = $this->id_event;

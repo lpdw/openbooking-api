@@ -10,6 +10,7 @@
  * @copyright 2015 - 2016 OpenBooking Group
  *
  */
+
 namespace OpenBooking;
 
 use \PDO;
@@ -21,7 +22,7 @@ use OpenBooking\Exceptions\ValidDatasException;
 use OpenBooking\Exceptions\UnknowErrorException;
 use OpenBooking\Exceptions\SQLErrorException;
 use OpenBooking\model\ModelParticipant;
-
+use OpenBooking\model\ModelParticipation;
 
 include_once dirname(__FILE__) . "/../model/ModelParticipant.php";
 include_once dirname(__FILE__) . "/../../_exceptions/LoginException.php";
@@ -33,7 +34,7 @@ include_once dirname(__FILE__) . "/../../_exceptions/ValidDatasException.php";
 /**
  * Class Participant
  *
- * @package OpenBooking\Participant
+ * @package OpenBooking
  */
 class Participant
 {
@@ -129,7 +130,7 @@ class Participant
      * Get current participant datas
      * @return ModelParticipant
      */
-    public function getParticipant()
+    public function get()
     {
         $res = new ModelParticipant();
         $res->id = $this->id;
@@ -184,6 +185,46 @@ class Participant
 
         } else {
             throw new ValidDatasException("Unexpected format");
+        }
+    }
+
+    /**
+     * Get list of all participations for a participant
+     *
+     * @return ModelParticipation[]
+     * @throws SQLErrorException
+     * @throws UnknowErrorException
+     */
+    public function getParticipations(){
+
+        try{
+            $sql = "SELECT participation.* FROM ob_participation AS participation
+                JOIN ob_participant AS people ON people.id = participation.id_participant
+                WHERE people.id = :id";
+            $req = $this->pdo->prepare($sql);
+            $req->bindParam(":id", $this->id);
+            $req->execute();
+            $req->setFetchMode(PDO::FETCH_OBJ);
+            $rows = $req->FetchAll();
+            $return = [];
+            if(isset($rows[0]->id)){
+                foreach ($rows as $row) {
+                    $tmp = new ModelParticipation();
+                    $tmp->id                = $row->id;
+                    $tmp->id_event          = $row->id_event;
+                    $tmp->id_participant    = $row->id_participant;
+                    $tmp->cancelled         = $row->cancelled;
+                    $tmp->comments          = $row->comments;
+                    $tmp->present           = $row->present;
+                    $return[] = $tmp;
+                }
+                return $return;
+            }
+            return [];
+        } catch (PDOException $e) {
+            throw new SQLErrorException($e->getMessage());
+        } catch (Exception $e) {
+            throw new UnknowErrorException();
         }
     }
 
