@@ -7,6 +7,8 @@
  * @copyright 2015 - 2016 OpenBooking Group
  */
 
+namespace OpenBooking;
+
 Class Event{
     private $id;
     private $name;
