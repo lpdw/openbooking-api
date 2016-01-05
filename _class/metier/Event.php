@@ -188,8 +188,10 @@ Class Event{
     public function setCancelled($cancelled)
     {
         $this->cancelled = $cancelled;
+        //Todo : Envoyer un mail
     }
 
+    // Todo : Supprimer les setters car inutiles vu qu'on a une function update. Laisser juste setCanelled et enregistrer en bdd.
     /**
      * Event constructor.
      * @param $id
@@ -243,9 +245,10 @@ Class Event{
      * @param $param
      * @return array
      */
-    public static function add($param)
+    public static function add($param) //Todo : passer parametres plutot qu'un tableau, sachant que le param cancelled est par defaut à 0. donc pas besoin de le passer
     {
         try{
+            //Todo : vérifier que les parametres ne sont pas vide ou = ""
             $pdo = $GLOBALS["pdo"];
             $sql = "INSERT INTO ob_event (name,
                                           description,
@@ -313,12 +316,14 @@ Class Event{
             $req->bindParam(':name', $param["name"]);
             $req->bindParam(':description', $param["description"]);
             $req->bindParam(':localisation', $param["localisation"]);
-            $req->bindParam(':date', $param["date"]);
+            $req->bindParam(':date', $param["date"]); //Todo : Convert date format mm/dd/YYYY HH:mm:ss to timestamp
             $req->bindParam(':participants_max', $param["participants_max"]);
             $req->bindParam(':organizer', $param["organizer"]);
             $req->bindParam(':organizer_email', $param["organizer_email"]);
             $req->bindParam('open_to_registration', $param["open_to_registration"]);
             $req->bindParam('cancelled', $param["cancelled"]);
+
+            //Todo : Envoyer un mail
 
             $req->execute();
             return array("code" => 0, "message" => "ok");
