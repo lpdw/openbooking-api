@@ -91,14 +91,17 @@ class Email{
      */
     public function __construct()
     {
+        $iniConf = parse_ini_file(dirname(__FILE__)."/../conf.ini", true);
+        $smtpConf  = $iniConf['SMTP'];
+
         $this->pdo          = $GLOBALS['pdo'];
-        $this->smtpFrom     = "No Reply"; // Todo : Get smtp and from email from .ini file
-        $this->smtpFromName = "noreply@noreply.fr"; // Todo : Get smtp and from email from .ini file
-        $this->smtpHost     = "smtp1.example.com;smtp2.example.com";
-        $this->smtpUser     = "user@example.com";
-        $this->smtpPass     = "secret";
-        $this->smtpPort     = 587;
-        $this->smtpType     = "tls";
+        $this->smtpFrom     = $smtpConf['smtpFrom'];
+        $this->smtpFromName = $smtpConf['smtpFromName'];
+        $this->smtpHost     = $smtpConf['smtpHost'];
+        $this->smtpUser     = $smtpConf['smtpUser'];
+        $this->smtpPass     = $smtpConf['smtpPass'];
+        $this->smtpPort     = $smtpConf['smtpPort'];
+        $this->smtpType     = $smtpConf['smtpType'];
     }
 
     /**
@@ -145,7 +148,7 @@ class Email{
      */
     private function getTemplate($type) {
         try {
-            $sql = "SELECT object, body FROM ob_email WHERE type = :type";
+            $sql = "SELECT object, body FROM ob_email_type WHERE type = :type";
             $req = $this->pdo->prepare($sql);
             $req->bindParam(":type", $type);
             $req->execute();

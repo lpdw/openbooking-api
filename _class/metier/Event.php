@@ -148,7 +148,7 @@ Class Event
      * Get current Event datas
      * @return ModelEvent
      */
-    public function getEvent()
+    public function get()
     {
         $res = new ModelEvent();
         $res->id = $this->id;
@@ -166,7 +166,9 @@ Class Event
     }
 
     /**
-     * Adding a new Event in database
+     * Create a new Event in database
+     *
+     * If a new Event was created , array("code" => 0, "message" => "ok") is returned, otherwise an exception is thrown
      * @param $name
      * @param $description
      * @param $localisation
@@ -175,7 +177,7 @@ Class Event
      * @param $organizer
      * @param $organizer_email
      * @param $open_to_registration
-     * @return int
+     * @return array
      * @throws NullDatasException
      * @throws SQLErrorException
      * @throws UnknowErrorException
@@ -222,7 +224,7 @@ Class Event
                 $req->bindParam('open_to_registration', $open_to_registration);
 
                 $req->execute();
-                return 0;
+                return array("code" => 0, "message" => "ok");
 
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
@@ -318,15 +320,14 @@ Class Event
             $req->execute();
             $participants = $req->fetchall();
             $res = array();
+            if(isset($participants[0]->id)) {
+                foreach ($participants as $key => $participant) {
+                    $res[$key] = new ModelParticipant();
 
-            foreach($participants as $key => $participant)
-            {
-                $res[$key] = new ModelParticipant();
-
-                foreach($participant as $attribut => $value)
-                {
-                    $field = ($attribut == "password" ? null : $value);
-                    $res[$key]->{$attribut}= $field;
+                    foreach ($participant as $attribut => $value) {
+                        $field = ($attribut == "password" ? null : $value);
+                        $res[$key]->{$attribut} = $field;
+                    }
                 }
             }
             return $res;
