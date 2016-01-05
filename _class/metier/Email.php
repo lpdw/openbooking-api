@@ -1,56 +1,234 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: Max
+ * Email Class File.
+ * @version 1.0
+ * @author Elias Cédric Laouiti
+ * @author Maxime Florile
  * Date: 04/01/2016
  * Project: OpenBooking
  * @copyright 2015 - 2016 OpenBooking Group
+ *
+ */
+
+namespace OpenBooking;
+use \PDO;
+use \PDOException;
+use \Exception;
+use OpenBooking\Exceptions\SQLErrorException;
+use OpenBooking\Exceptions\UnknowErrorException;
+use OpenBooking\model\ModelParticipant;
+use PHPMailer;
+
+require dirname(__FILE__).'/../../vendor/autoload.php';
+
+/**
+ * Class Email
+ * @package OpenBooking
  */
 
 class Email{
+    /**
+     * Email id
+     * @var int $id
+     */
     private $id;
+
+    /**
+     * Email object
+     * @var string $object
+     */
     private $object;
+
+    /**
+     * Email body
+     * @var string body
+     */
     private $body;
 
     /**
-     * @return mixed
+     * @ignore
      */
-    public function getId()
+    private $smtpHost;
+
+    /**
+     * @ignore
+     */
+    private $smtpUser;
+
+    /**
+     * @ignore
+     */
+    private $smtpPass;
+
+    /**
+     * @ignore
+     */
+    private $smtpPort;
+
+    /**
+     * @ignore
+     */
+    private $smtpType;
+
+    /**
+     * @ignore
+     */
+    private $smtpFrom;
+
+    /**
+     * @ignore
+     */
+    private $smtpFromName;
+
+    /**
+     * @ignore
+     */
+    private $pdo;
+
+    /**
+     * Email constructor.
+     */
+    public function __construct()
     {
-        return $this->id;
+        $this->pdo          = $GLOBALS['pdo'];
+        $this->smtpFrom     = "No Reply"; // Todo : Get smtp and from email from .ini file
+        $this->smtpFromName = "noreply@noreply.fr"; // Todo : Get smtp and from email from .ini file
+        $this->smtpHost     = "smtp1.example.com;smtp2.example.com";
+        $this->smtpUser     = "user@example.com";
+        $this->smtpPass     = "secret";
+        $this->smtpPort     = 587;
+        $this->smtpType     = "tls";
     }
 
     /**
-     * @return mixed
+     * Get the email template, format the template and send it
+     * @param string $type Attempt value :
+     * 'remind1day',
+     * 'remind7day',
+     * 'waiting_list',
+     * 'participant_registration',
+     * 'participant_annulation',
+     * 'event_annulation',
+     * 'participant_waiting_list_place_available',
+     * 'event_modification'
+     *
+     * @param ModelParticipant[] $recipients
+     * @param null | Event $event
      */
-    public function getObject()
-    {
-        return $this->object;
+    public function prepareAndSendEmail($type, $recipients, $event = null){
+        $this->getTemplate($type);
+            foreach ($recipients as $recipient) {
+                $body = $this->formatEmail($recipient, $event);
+                $object = $this->object;
+                $to = $recipient->email;
+                $toName = $recipient->last_name." ". $recipient->first_name;
+                $this->send($to, $toName, $object, $body);
+            }
+
     }
 
     /**
-     * @param mixed $object
+     * Get the template of email.
+     *
+     * @param string $type Attempt value :
+     * 'remind1day',
+     * 'remind7day',
+     * 'waiting_list',
+     * 'participant_registration',
+     * 'participant_annulation',
+     * 'event_annulation',
+     * 'participant_waiting_list_place_available',
+     * 'event_modification'
+     * @throws SQLErrorException
+     * @throws UnknowErrorException
      */
-    public function setObject($object)
-    {
-        $this->object = $object;
+    private function getTemplate($type) {
+        try {
+            $sql = "SELECT object, body FROM ob_email WHERE type = :type";
+            $req = $this->pdo->prepare($sql);
+            $req->bindParam(":type", $type);
+            $req->execute();
+            $req->setFetchMode(PDO::FETCH_OBJ);
+            $res = $req->fetch();
+
+        } catch (PDOException $e) {
+            throw new SQLErrorException($e->getMessage());
+        } catch (Exception $e) {
+            throw new UnknowErrorException();
+        }
+        if(isset($res->body) && !empty($res->body)){
+            $this->body = $res->body;
+            $this->object = $res->object;
+        }else{
+            throw new UnknowErrorException();
+        }
     }
 
     /**
-     * @return mixed
+     * Replace tags by customs values.
+     *
+     * Available tags =
+     *
+     * {{eventLocation}}
+     * {{eventDate}}
+     * {{eventName}}
+     * {{recipientFirstName}}
+     * {{recipientLastName}}
+     *
+     * @param ModelParticipant $recipient
+     * @param Event $event
+     * @return string
      */
-    public function getBody()
-    {
-        return $this->body;
+    private function formatEmail($recipient, $event){
+        $recipientFirstName = $recipient->first_name;
+        $recipientLastName  = $recipient->last_name;
+        $newBody = null;
+
+        if(!is_null($event)){
+            $eventName          = $event->getName();
+            $eventDate          = $event->getDate();
+            $eventLocalisation  = $event->getLocalisation();
+
+            $newBody = str_replace("{{eventLocation}}", $eventLocalisation, $this->body);
+            $newBody = str_replace("{{eventDate}}", $eventDate, $newBody);
+            $newBody = str_replace("{{eventName}}", $eventName, $newBody);
+        }
+
+        $newBody  = str_replace("{{recipientFirstName}}", $recipientFirstName, $newBody);
+        $newBody = str_replace("{{recipientLastName}}", $recipientLastName, $newBody);
+
+        return $newBody;
     }
 
     /**
-     * @param mixed $body
+     * Send email
+     * @param string $to
+     * @param string $toName
+     * @param string $object
+     * @param string $body
+     * @throws UnknowErrorException
+     * @throws \phpmailerException
      */
-    public function setBody($body)
-    {
-        $this->body = $body;
+    private function send($to, $toName, $object, $body){
+        $mail = new PHPMailer;
+
+        $mail->isSMTP();
+        $mail->Host = $this->smtpHost;
+        $mail->SMTPAuth = true;
+        $mail->Username = $this->smtpUser;
+        $mail->Password = $this->smtpPass;
+        $mail->SMTPSecure = $this->smtpType;
+        $mail->Port = $this->smtpPort;
+        $mail->setFrom($this->smtpFrom, $this->smtpFromName);
+        $mail->addAddress($to, $toName);
+        $mail->isHTML(true);
+
+        $mail->Subject = $object;
+        $mail->Body    = $body;
+
+        if(!$mail->send()) {
+            throw new UnknowErrorException("Cannot send email");
+        }
     }
-
-
 }
