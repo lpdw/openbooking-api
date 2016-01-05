@@ -7,12 +7,12 @@
  * @copyright 2015 - 2016 OpenBooking Group
  */
 
-namespace OpenBooking\model;
+namespace OpenBooking\_Class\Model;
+
 /**
  * Class ModelParticipant
- * @package OpenBooking\model\ModelParticipant
+ * @package OpenBooking\_Class\Model
  */
-
 Class ModelParticipant{
 
     /**

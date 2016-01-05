@@ -1,19 +1,19 @@
 <?php
 
 /**
+ * Access Denied Exception File
  * Date: 05/01/2016
  * Project: OpenBooking
  * @copyright 2015 - 2016 OpenBooking Group
  */
 
-namespace OpenBooking\Exceptions;
+namespace OpenBooking\_Exceptions;
 use \Exception;
 
 /**
  * Class AccessDeniedException
- * @package OpenBooking\Exceptions
+ * @package OpenBooking\_Exceptions
  */
-
 class AccessDeniedException extends Exception
 {
     /**
