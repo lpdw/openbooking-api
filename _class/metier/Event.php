@@ -30,7 +30,6 @@ include_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
 
 /**
  * Class Event
- *
  * @package OpenBooking\Event
  */
 Class Event
@@ -90,13 +89,13 @@ Class Event
     private $creation_date;
 
     /**
-     * Event registrations state (opened or closed)
+     * Event registrations status (1: opened or 0: closed)
      * @var int
      */
     private $open_to_registration;
 
     /**
-     * Event state (cancelled or not)
+     * Event status (1: cancelled or 0: not cancelled)
      * @var int
      */
     private $cancelled;
