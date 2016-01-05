@@ -145,12 +145,12 @@ class Participant
     /**
      * Create a new user.
      *
-     * If a new user was created , 0 is returned, otherwise an exception is thrown
+     * If a new user was created , array("code" => 0, "message" => "ok") is returned, otherwise an exception is thrown
      * @param string $first_name
      * @param string $last_name
      * @param string $email
      * @param string $password
-     * @return int
+     * @return array
      * @throws SQLErrorException
      * @throws UnknowErrorException
      * @throws ValidDatasException
@@ -175,7 +175,7 @@ class Participant
                 $req->bindParam(":email", $email);
                 $req->bindParam(":password", $password);
                 $req->execute();
-                return 0;
+                return array("code" => 0, "message" => "ok");
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
