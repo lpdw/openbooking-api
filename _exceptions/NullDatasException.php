@@ -1,19 +1,19 @@
 <?php
 
 /**
+ * Null Datas Exception File
  * Date: 05/01/2016
  * Project: OpenBooking
  * @copyright 2015 - 2016 OpenBooking Group
  */
 
-namespace OpenBooking\Exceptions;
+namespace OpenBooking\_Exceptions;
 use \Exception;
 
 /**
  * Class NullDatasException
- * @package OpenBooking\Exceptions
+ * @package OpenBooking\_Exceptions
  */
-
 class NullDatasException extends Exception
 {
     /**

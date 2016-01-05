@@ -10,19 +10,19 @@
  *
  */
 
-namespace OpenBooking;
+namespace OpenBooking\_Class\Metier;
 use \PDOException;
 use \PDO;
 use \Exception;
-use OpenBooking\Exceptions\AccessDeniedException;
-use OpenBooking\Exceptions\SQLErrorException;
-use OpenBooking\Exceptions\UnknowErrorException;
-use OpenBooking\Exceptions\ValidDatasException;
-use OpenBooking\model;
+use OpenBooking\_Exceptions\AccessDeniedException;
+use OpenBooking\_Exceptions\SQLErrorException;
+use OpenBooking\_Exceptions\UnknowErrorException;
+use OpenBooking\_Exceptions\ValidDatasException;
+use OpenBooking\_Class\Model\ModelParticipation;
 
 /**
  * Class Participation
- * @package OpenBooking
+ * @package OpenBooking\_Class\Metier
  */
 class Participation
 {
@@ -116,7 +116,7 @@ class Participation
      * @return model\ModelParticipation
      */
     public function get(){
-        $res = new model\ModelParticipation();
+        $res = new ModelParticipation();
         $res->id                = $this->id;
         $res->id_event          = $this->id_event;
         $res->id_participant    = $this->id_participant;

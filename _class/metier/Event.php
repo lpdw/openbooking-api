@@ -10,16 +10,16 @@
  *
  */
 
-namespace OpenBooking;
+namespace OpenBooking\_Class\Metier;
 
 use \PDO;
 use \PDOException;
 use \Exception;
-use OpenBooking\Exceptions\NullDatasException;
-use OpenBooking\Exceptions\UnknowErrorException;
-use OpenBooking\Exceptions\SQLErrorException;
-use OpenBooking\model\ModelEvent;
-use OpenBooking\model\ModelParticipant;
+use OpenBooking\_Exceptions\NullDatasException;
+use OpenBooking\_Exceptions\UnknowErrorException;
+use OpenBooking\_Exceptions\SQLErrorException;
+use OpenBooking\_Class\Model\ModelEvent;
+use OpenBooking\_Class\Model\ModelParticipant;
 
 
 include_once dirname(__FILE__) . "/../model/ModelEvent.php";
@@ -30,7 +30,7 @@ include_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
 
 /**
  * Class Event
- * @package OpenBooking\Event
+ * @package OpenBooking\_Class\Metier
  */
 Class Event
 {
@@ -237,6 +237,7 @@ Class Event
     }
 
     /**
+     * Update an event
      * @param $name
      * @param $description
      * @param $localisation

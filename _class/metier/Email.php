@@ -11,28 +11,22 @@
  *
  */
 
-namespace OpenBooking;
+namespace OpenBooking\_Class\Metier;
 use \PDO;
 use \PDOException;
 use \Exception;
-use OpenBooking\Exceptions\SQLErrorException;
-use OpenBooking\Exceptions\UnknowErrorException;
-use OpenBooking\model\ModelParticipant;
+use OpenBooking\_Exceptions\SQLErrorException;
+use OpenBooking\_Exceptions\UnknowErrorException;
+use OpenBooking\_Class\Model\ModelParticipant;
 use PHPMailer;
 
 require dirname(__FILE__).'/../../vendor/autoload.php';
 
 /**
  * Class Email
- * @package OpenBooking
+ * @package OpenBooking\_Class\Metier
  */
-
 class Email{
-    /**
-     * Email id
-     * @var int $id
-     */
-    private $id;
 
     /**
      * Email object

@@ -11,18 +11,18 @@
  *
  */
 
-namespace OpenBooking;
+namespace OpenBooking\_Class\Metier;
 
 use \PDO;
 use \PDOException;
 use \Exception;
-use OpenBooking\Exceptions\LoginException;
-use OpenBooking\Exceptions\NullDatasException;
-use OpenBooking\Exceptions\ValidDatasException;
-use OpenBooking\Exceptions\UnknowErrorException;
-use OpenBooking\Exceptions\SQLErrorException;
-use OpenBooking\model\ModelParticipant;
-use OpenBooking\model\ModelParticipation;
+use OpenBooking\_Exceptions\LoginException;
+use OpenBooking\_Exceptions\NullDatasException;
+use OpenBooking\_Exceptions\ValidDatasException;
+use OpenBooking\_Exceptions\UnknowErrorException;
+use OpenBooking\_Exceptions\SQLErrorException;
+use OpenBooking\_Class\Model\ModelParticipant;
+use OpenBooking\_Class\Model\ModelParticipation;
 
 include_once dirname(__FILE__) . "/../model/ModelParticipant.php";
 include_once dirname(__FILE__) . "/../../_exceptions/LoginException.php";
@@ -33,8 +33,7 @@ include_once dirname(__FILE__) . "/../../_exceptions/ValidDatasException.php";
 
 /**
  * Class Participant
- *
- * @package OpenBooking
+ * @package OpenBooking\_Class\Metier
  */
 class Participant
 {

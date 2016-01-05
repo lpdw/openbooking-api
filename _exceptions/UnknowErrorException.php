@@ -1,12 +1,13 @@
 <?php
 
 /**
+ * Unknow error Exception
  * Date: 05/01/2016
  * Project: OpenBooking
  * @copyright 2015 - 2016 OpenBooking Group
  */
 
-namespace OpenBooking\Exceptions;
+namespace OpenBooking\_Exceptions;
 use \Exception;
 
 /**

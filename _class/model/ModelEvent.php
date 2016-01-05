@@ -9,41 +9,42 @@
  * @copyright 2015 - 2016 OpenBooking Group
  */
 
-namespace OpenBooking\model;
+namespace OpenBooking\_Class\Model;
 
 /**
  * Class ModelEvent
- * @package OpenBooking\Model\ModelParticpant
+ * @package OpenBooking\_Class\Model
  */
+
 Class ModelEvent
 {
     /**
      * Event ID
-     * @var int
+     * @var int $id
      */
     public $id;
 
     /**
      * Event name
-     * @var string
+     * @var string $name
      */
     public $name;
 
     /**
      * Event description
-     * @var string
+     * @var string $description
      */
     public $description;
 
     /**
      * Event localisation
-     * @var string
+     * @var string $localisation
      */
     public $localisation;
 
     /**
      * Event date
-     * @var int Timestamp required
+     * @var int $date Timestamp required
      */
     public $date;
 
@@ -61,25 +62,25 @@ Class ModelEvent
 
     /**
      * Email address of Event organizer
-     * @var string
+     * @var string $organizer_email
      */
     public $organizer_email;
 
     /**
      * Event creation date
-     * @var int Timestamp required
+     * @var int $creation_date Timestamp required
      */
     public $creation_date;
 
     /**
      * Event registration status (1: opened or 0: closed)
-     * @var int
+     * @var int $open_to_registration
      */
     public $open_to_registration;
 
     /**
      * Event status (1: cancelled or 0: not cancelled)
-     * @var int
+     * @var int $cancelled
      */
     public $cancelled;
 }

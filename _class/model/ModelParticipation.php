@@ -10,11 +10,11 @@
  *
  */
 
-namespace OpenBooking\model;
+namespace OpenBooking\_Class\Model;
 
 /**
  * Class ModelParticipation
- * @package OpenBooking\model
+ * @package OpenBooking\_Class\Model
  */
 Class ModelParticipation
 {
