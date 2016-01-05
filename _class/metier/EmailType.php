@@ -13,13 +13,10 @@
 
 namespace OpenBooking\_Class\Metier\EmailType;
 use \PDO;
-use \PDOException;
 use \Exception;
 use OpenBooking\_Exceptions\SQLErrorException;
 use OpenBooking\_Exceptions\UnknowErrorException;
 use OpenBooking\_Exceptions\NullDatasException;
-use OpenBooking\_Class\model\ModelParticipant;
-use PHPMailer;
 
 /**
  * Class EmailType
@@ -216,7 +213,7 @@ Class EmailType
                 $req->bindParam(":body", $body);
                 $req->bindParam(":id", $this->id);
                 $req->execute();
-                $this->object = $object;
+                $this->body = $body;
             } catch (SQLErrorException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
@@ -252,7 +249,7 @@ Class EmailType
                 $req->bindParam(":last_edit", $last_edit);
                 $req->bindParam(":id", $this->id);
                 $req->execute();
-                $this->object = $object;
+                $this->last_edit = $last_edit;
             } catch (SQLErrorException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
