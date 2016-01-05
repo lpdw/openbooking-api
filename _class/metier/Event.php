@@ -192,7 +192,7 @@ Class Event{
 
     /**
      * Event constructor.
-     * @param array $param
+     * @param $id
      * @throw Exception
      */
     public function __construct($id)
@@ -217,6 +217,12 @@ Class Event{
         }
     }
 
+    /**
+     * Get an existing event in database.
+     * @param $id
+     * @return mixed
+     * @throws Exception
+     */
     private function getEvent($id)
     {
         $sql = "SELECT * FROM ob_event WHERE id=:id";
@@ -226,12 +232,17 @@ Class Event{
         $req->execute();
         $res = $req->fetch();
 
-        if(count($res->id) == 0){
+        if(!isset($res->id)){
             throw new Exception("Exception : Unknown participant");
         }
         return $res;
     }
 
+    /**
+     * Adding a new event in database.
+     * @param $param
+     * @return array
+     */
     public static function add($param)
     {
         try{
@@ -276,12 +287,39 @@ Class Event{
 
     }
 
-    public function cancelEvent()
+    /**
+     * Update an existing event in database.
+     * @param $param
+     * @return array
+     */
+    public function updateEvent($param)
     {
         try{
-            $sql="UPDATE ob_event SET cancelled=1 WHERE id=:id";
-            $req = $this->pdo->prepare($sql);
-            $req->bindParam(":id", $this->id);
+            $pdo = $GLOBALS["pdo"];
+            $sql = "UPDATE ob_event SET name = :name,
+                                        description = :description,
+                                        localisation = :localisation,
+                                        date = :date,
+                                        participants_max = :participants_max,
+                                        organizer = :organizer,
+                                        organizer_email = :organizer_email,
+                                        open_to_registration = :open_to_registration,
+                                        cancelled = :cancelled
+                  WHERE id = :id";
+
+            $req = $pdo->prepare($sql);
+
+            $req->bindParam(':id', $this->id);
+            $req->bindParam(':name', $param["name"]);
+            $req->bindParam(':description', $param["description"]);
+            $req->bindParam(':localisation', $param["localisation"]);
+            $req->bindParam(':date', $param["date"]);
+            $req->bindParam(':participants_max', $param["participants_max"]);
+            $req->bindParam(':organizer', $param["organizer"]);
+            $req->bindParam(':organizer_email', $param["organizer_email"]);
+            $req->bindParam('open_to_registration', $param["open_to_registration"]);
+            $req->bindParam('cancelled', $param["cancelled"]);
+
             $req->execute();
             return array("code" => 0, "message" => "ok");
 
