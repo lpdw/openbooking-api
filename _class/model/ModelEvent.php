@@ -7,6 +7,12 @@
  * @copyright 2015 - 2016 OpenBooking Group
  */
 
+namespace OpenBooking\model;
+/**
+ * Class ModelEvent
+ * @package OpenBooking\model\ModelParticipant
+ */
+
 Class ModelEvent
 {
     public $id;
