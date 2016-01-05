@@ -27,11 +27,6 @@ require dirname(__FILE__).'/../../vendor/autoload.php';
  * @package OpenBooking\_Class\Metier
  */
 class Email{
-    /**
-     * Email id
-     * @var int $id
-     */
-    private $id;
 
     /**
      * Email object
