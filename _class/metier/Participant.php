@@ -24,6 +24,11 @@ use OpenBooking\model\ModelParticipant;
 
 
 include_once dirname(__FILE__) . "/../model/ModelParticipant.php";
+include_once dirname(__FILE__) . "/../../_exceptions/LoginException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/NullDatasException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/SQLErrorException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/ValidDatasException.php";
 
 /**
  * Class Participant
