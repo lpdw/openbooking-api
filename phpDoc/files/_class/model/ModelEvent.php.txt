@@ -44,7 +44,7 @@ Class ModelEvent
 
     /**
      * Event date
-     * @var int $date Timestamp required
+     * @var int $date DateTime
      */
     public $date;
 
@@ -79,9 +79,9 @@ Class ModelEvent
     public $open_to_registration;
 
     /**
-     * Event status (1: cancelled or 0: not cancelled)
-     * @var int $cancelled
+     * Event status (1: canceled or 0: not canceled)
+     * @var int $canceled
      */
-    public $cancelled;
+    public $canceled;
 }
 

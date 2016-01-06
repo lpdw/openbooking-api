@@ -17,15 +17,35 @@ use OpenBooking\_Class\Metier\Participant;
 use OpenBooking\_Class\Metier\Participation;
 use OpenBooking\_Class\Metier\Event;
 
+
+//Participant::add("Elias", "Laouiti", "eliaslao@gmail.com", "1234");
+//Participant::add("Elias", "Cédric Laouiti", "elias@liwio.com", "2004");
+//Participant::add("Moi", "ET Moi", "elias@abtasty.com", "9876");
+
+//Event::add("MyEvent", "Desc", "Ici", "2016-04-20 14:00:00", 50,"Elias", "eliaslao@gmail.com");
+//
+//
 //$user = new Participant("eliaslao@gmail.com", "1234");
-//$event = new Event(1);
+//$event = new Event(2);
 //
 //Participation::add($user, $event);
 //
-
+//
 $user = new Participant("elias@liwio.com", "2004");
-$event = new Event(1);
-
+$event = new Event(3);
+//
 Participation::add($user, $event);
+//$p = new Participation($user->getId(), 3);
+//$p->setPresent();
 
 
+//$ev1 = new Event(1);
+//$ev1->setCanceled();
+//
+//$ev2 = new Event(2);
+//$ev2->setCanceled();
+//
+//$ev3 = new Event(3);
+//$ev3->setCanceled(false);
+//
+//print_r(Event::getAll());

@@ -11,7 +11,7 @@
  *
  */
 
-namespace OpenBooking\_Class\Metier\EmailType;
+namespace OpenBooking\_Class\Metier;
 use \PDO;
 use \Exception;
 use OpenBooking\_Exceptions\SQLErrorException;
@@ -20,7 +20,7 @@ use OpenBooking\_Exceptions\NullDatasException;
 
 /**
  * Class EmailType
- * @package OpenBooking\_Class\Metier\EmailType
+ * @package OpenBooking\_Class\Metier
  */
 Class EmailType
 {
@@ -58,7 +58,7 @@ Class EmailType
 
     /**
      * EmailType last edit date
-     * @var int Timestamp required
+     * @var DateTime
      */
     private $last_edit;
 
@@ -225,8 +225,8 @@ Class EmailType
     }
 
     /**
-     * Get EmailType last edit date
-     * @return int
+     * Get EmailType last edit date. Format : DateTime
+     * @return DateTime
      */
     public function getLastEdit()
     {
