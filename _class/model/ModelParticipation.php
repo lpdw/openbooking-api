@@ -43,12 +43,12 @@ Class ModelParticipation
     public $comments;
 
     /**
-     * Participation canceled
+     * Participation cancelled
      *
-     * If canceled == 0 => Participation NOT canceled else if canceled == 1, participation was canceled
-     * @var bool $canceled
+     * If cancelled == 0 => Participation NOT cancelled else if cancelled == 1, participation was cancelled
+     * @var bool $cancelled
      */
-    public $canceled;
+    public $cancelled;
 
     /**
      * Participant present

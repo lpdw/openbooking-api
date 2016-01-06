@@ -15,19 +15,20 @@ namespace OpenBooking\_Class\Metier;
 use \PDO;
 use \PDOException;
 use \Exception;
+use \DateTime;
 use OpenBooking\_Exceptions\NullDatasException;
-use OpenBooking\_Exceptions\UnknowErrorException;
+use OpenBooking\_Exceptions\UnknownErrorException;
 use OpenBooking\_Exceptions\SQLErrorException;
 use OpenBooking\_Exceptions\DataAlreadyExistInDatabaseException;
 use OpenBooking\_Class\Model\ModelEvent;
 use OpenBooking\_Class\Model\ModelParticipant;
 
-
 include_once dirname(__FILE__) . "/../model/ModelEvent.php";
 include_once dirname(__FILE__) . "/../model/ModelParticipant.php";
+include_once dirname(__FILE__) . "/../metier/Email.php";
 include_once dirname(__FILE__) . "/../../_exceptions/NullDatasException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/SQLErrorException.php";
-include_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/UnknownErrorException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/DataAlreadyExistInDatabaseException.php";
 
 /**
@@ -97,10 +98,10 @@ Class Event
     private $open_to_registration;
 
     /**
-     * Event status (1: canceled or 0: not canceled)
+     * Event status (1: cancelled or 0: not cancelled)
      * @var int
      */
-    private $canceled;
+    private $cancelled;
 
     /**
      * @ignore
@@ -112,7 +113,7 @@ Class Event
      * Event constructor.
      * @param int $id
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function __construct($id)
     {
@@ -135,14 +136,14 @@ Class Event
                 $this->organizer_email = $res->organizer_email;
                 $this->creation_date = $res->creation_date;
                 $this->open_to_registration = $res->open_to_registration;
-                $this->canceled = $res->canceled;
+                $this->cancelled = $res->cancelled;
             } else {
-                throw new UnknowErrorException("Unknow event");
+                throw new UnknownErrorException("Unknown event");
             }
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException($e->getMessage());
+            throw new UnknownErrorException($e->getMessage());
         }
     }
 
@@ -163,7 +164,7 @@ Class Event
         $res->organizer_email = $this->organizer_email;
         $res->creation_date = $this->creation_date;
         $res->open_to_registration = $this->open_to_registration;
-        $res->canceled = $this->canceled;
+        $res->cancelled = $this->cancelled;
         return $res;
     }
 
@@ -182,7 +183,7 @@ Class Event
      * @return mixed array
      * @throws NullDatasException
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      * @throws DataAlreadyExistInDatabaseException
      */
     public static function add($name, $description, $localisation, $date, $participants_max, $organizer, $organizer_email, $open_to_registration = true)
@@ -234,7 +235,7 @@ Class Event
                     throw new SQLErrorException($e->getMessage());
                 }
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
         } else {
             throw new NullDatasException("All fields must be filled");
@@ -245,13 +246,13 @@ Class Event
      * Get all events "Open to registration"
      * @return ModelEvent[]
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public static function getAll()
     {
         try {
             $pdo = $GLOBALS["pdo"];
-            $sql = "SELECT * FROM ob_event WHERE open_to_registration = 1 AND canceled != 1";
+            $sql = "SELECT * FROM ob_event WHERE open_to_registration = 1 AND cancelled != 1";
             $req = $pdo->prepare($sql);
             $req->execute();
             $req->setFetchMode(PDO::FETCH_OBJ);
@@ -269,14 +270,14 @@ Class Event
                 $tmp->organizer_email = $row->organizer_email;
                 $tmp->creation_date = $row->creation_date;
                 $tmp->open_to_registration = $row->open_to_registration;
-                $tmp->canceled = $row->canceled;
+                $tmp->cancelled = $row->cancelled;
                 $return[] = $tmp;
             }
             return $return;
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
     }
 
@@ -293,9 +294,9 @@ Class Event
      * @return mixed array
      * @throws NullDatasException
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
-    public function updateEvent($name, $description, $localisation, $date, $participants_max, $organizer, $organizer_email, $open_to_registration)
+    public function update($name, $description, $localisation, $date, $participants_max, $organizer, $organizer_email, $open_to_registration)
     {
         if (strlen(trim($name)) > 0
             && strlen(trim($description)) > 0
@@ -329,7 +330,8 @@ Class Event
                 $req->bindParam(':organizer_email', $organizer_email);
                 $req->bindParam('open_to_registration', $open_to_registration);
 
-                //Todo : Envoyer un mail
+                $email = new Email();
+                $email->prepareAndSendEmail("event_modification", $this->getParticipants(), $this);
 
                 $req->execute();
                 return array("code" => 0, "message" => "ok");
@@ -337,7 +339,7 @@ Class Event
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
         } else {
             throw new NullDatasException("All fields must be filled");
@@ -348,7 +350,7 @@ Class Event
      * Get all the Event participants
      * @return ModelParticipant[]
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function getParticipants()
     {
@@ -380,10 +382,60 @@ Class Event
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
     }
 
+    /**
+     * Get the next recipients from a Participation, by date of registration, for waiting list
+     * @param DateTime $cancelled_registration_date
+     * @return ModelParticipant
+     * @throws SQLErrorException
+     * @throws UnknownErrorException
+     */
+    public function getNextRecipient(DateTime $cancelled_registration_date)
+    {
+        try {
+            $sql = "SELECT *
+                    FROM ob_participant
+                    INNER JOIN ob_participation
+                    ON ob_participation.id_participant = ob_participant.id
+                    WHERE ob_participation.id_event = :id
+                    AND ob_participation.registration_date > :date
+                    AND ob_participation.cancelled = 0
+                    ORDER BY ob_participation.registration_date
+                    LIMIT 1";
+
+            $req = $this->pdo->prepare($sql);
+            $req->bindParam(':id', $this->id);
+            $cancelled_registration_date = $cancelled_registration_date->format('Y-m-d H:i:s');
+            $req->bindParam(':date', $cancelled_registration_date);
+            $req->setFetchMode(pdo::FETCH_OBJ);
+
+            $req->execute();
+            $res = $req->fetch();
+            if (isset($res->id) && $res->id > 0) {
+
+                $nextRecipient = new ModelParticipant();
+                $nextRecipient->id = $res->id;
+                $nextRecipient->first_name = $res->first_name;
+                $nextRecipient->last_name = $res->last_name;
+                $nextRecipient->email = $res->email;
+                $nextRecipient->registration_date = $res->registration_date;
+                $nextRecipient->comments = $res->comments;
+                $nextRecipient->status = $res->status;
+
+                return $nextRecipient;
+            } else {
+                return false;
+            }
+
+        } catch (PDOException $e) {
+            throw new SQLErrorException($e->getMessage());
+        } catch (Exception $e) {
+            throw new UnknownErrorException('tralala');
+        }
+    }
 
     /**
      * Get Event ID
@@ -476,36 +528,37 @@ Class Event
     }
 
     /**
-     * Get Event status. Possible values : 1 (canceled), 0 (not canceled)
+     * Get Event status. Possible values : 1 (cancelled), 0 (not cancelled)
      * @return boolean
      */
-    public function getCanceled()
+    public function getCancelled()
     {
-        return $this->canceled;
+        return $this->cancelled;
     }
 
     /**
      * Set Event status and save it into database
-     * @param bool|true $canceled
+     * @param bool|true $cancelled
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
-    public function setCanceled($canceled = true)
+    public function setCancelled($cancelled = true)
     {
         try {
-            $this->canceled = $canceled;
-            $sql = "UPDATE ob_event SET canceled = :canceled WHERE id = :id";
+            $this->cancelled = $cancelled;
+            $sql = "UPDATE ob_event SET cancelled = :cancelled WHERE id = :id";
             $req = $this->pdo->prepare($sql);
-            $req->bindParam(":canceled", $canceled);
+            $req->bindParam(":cancelled", $cancelled);
             $req->bindParam("id", $this->id);
             $req->execute();
+
+            $email = new Email();
+            $email->prepareAndSendEmail('event-annulation', $this->getParticipants(), $this);
 
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
-
-        //Todo : Envoyer un mail
     }
 }

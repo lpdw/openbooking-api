@@ -16,7 +16,7 @@ use \PDO;
 use \PDOException;
 use \Exception;
 use OpenBooking\_Exceptions\SQLErrorException;
-use OpenBooking\_Exceptions\UnknowErrorException;
+use OpenBooking\_Exceptions\UnknownErrorException;
 use OpenBooking\_Class\Model\ModelParticipant;
 use PHPMailer;
 
@@ -85,7 +85,7 @@ class Email{
      */
     public function __construct()
     {
-        $iniConf = parse_ini_file(dirname(__FILE__)."/../conf.ini", true);
+        $iniConf = parse_ini_file(dirname(__FILE__)."/../../conf.ini", true);
         $smtpConf  = $iniConf['SMTP'];
 
         $this->pdo          = $GLOBALS['pdo'];
@@ -138,7 +138,7 @@ class Email{
      * 'participant_waiting_list_place_available',
      * 'event_modification'
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     private function getTemplate($type) {
         try {
@@ -152,13 +152,13 @@ class Email{
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
         if(isset($res->body) && !empty($res->body)){
             $this->body = $res->body;
             $this->object = $res->object;
         }else{
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
     }
 
@@ -204,7 +204,7 @@ class Email{
      * @param string $toName
      * @param string $object
      * @param string $body
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      * @throws \phpmailerException
      */
     private function send($to, $toName, $object, $body){
@@ -225,7 +225,7 @@ class Email{
         $mail->Body    = $body;
 
         if(!$mail->send()) {
-            throw new UnknowErrorException("Cannot send email");
+            throw new UnknownErrorException("Cannot send email");
         }
     }
 }

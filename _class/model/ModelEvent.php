@@ -79,8 +79,8 @@ Class ModelEvent
     public $open_to_registration;
 
     /**
-     * Event status (1: canceled or 0: not canceled)
-     * @var int $canceled
+     * Event status (1: cancelled or 0: not cancelled)
+     * @var int $cancelled
      */
-    public $canceled;
+    public $cancelled;
 }

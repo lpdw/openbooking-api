@@ -14,19 +14,21 @@ namespace OpenBooking\_Class\Metier;
 use \PDOException;
 use \PDO;
 use \Exception;
+use \DateTime;
 use OpenBooking\_Exceptions\AccessDeniedException;
 use OpenBooking\_Exceptions\SQLErrorException;
-use OpenBooking\_Exceptions\UnknowErrorException;
+use OpenBooking\_Exceptions\UnknownErrorException;
 use OpenBooking\_Exceptions\ValidDatasException;
 use OpenBooking\_Exceptions\DataAlreadyExistInDatabaseException;
-use OpenBooking\_Exceptions\EventIsCanceledException;
+use OpenBooking\_Exceptions\EventIscancelledException;
 use OpenBooking\_Class\Model\ModelParticipation;
+use OpenBooking\_Class\Model\ModelParticipant;
 
 include_once dirname(__FILE__) . "/../../_exceptions/AccessDeniedException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/SQLErrorException.php";
-include_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/UnknownErrorException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/ValidDatasException.php";
-include_once dirname(__FILE__) . "/../../_exceptions/EventIsCanceledException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/EventIscancelledException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/DataAlreadyExistInDatabaseException.php";
 
 /**
@@ -40,6 +42,18 @@ class Participation
      * @var int $id
      */
     private $id;
+
+    /**
+     * Participant instance
+     * @var Participant
+     */
+    private $participant;
+
+    /**
+     * Event instance
+     * @var Event $event
+     */
+    private $event;
 
     /**
      * Participant id
@@ -60,12 +74,18 @@ class Participation
     private $comments;
 
     /**
-     * Participation canceled
-     *
-     * If canceled == 0 => Participation NOT canceled else if canceled == 1, participation was canceled
-     * @var bool $canceled
+     * Date of the registration
+     * @var DateTime
      */
-    private $canceled;
+    private $registration_date;
+
+    /**
+     * Participation cancelled
+     *
+     * If cancelled == 0 => Participation NOT cancelled else if cancelled == 1, participation was cancelled
+     * @var bool $cancelled
+     */
+    private $cancelled;
 
     /**
      * Participant present
@@ -82,15 +102,17 @@ class Participation
 
     /**
      * Participation constructor.
-     * @param int $id_participant
-     * @param int $id_event
+     * @param Participant $participant
+     * @param Event $event
      * @throws AccessDeniedException
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
-    public function __construct($id_participant, $id_event)
+    public function __construct(Participant $participant, Event $event)
     {
         try {
+            $id_event = $event->getId();
+            $id_participant = $participant->getId();
             $sql = "SELECT * FROM ob_participation WHERE id_participant = :id_participant AND id_event = :id_event";
             $this->pdo = $GLOBALS['pdo'];
             $req = $this->pdo->prepare($sql);
@@ -101,11 +123,14 @@ class Participation
             $res = $req->fetch();
 
             if(isset($res->id)){
+                $this->participant = $participant;
+                $this->event = $event;
                 $this->id_participant = $id_participant;
                 $this->id_event = $id_event;
-                $this->canceled = $res->canceled;
+                $this->cancelled = $res->cancelled;
                 $this->id = $res->id;
                 $this->comments = $res->comments;
+                $this->registration_date = $res->registration_date;
                 $this->present = $res->present;
 
             } else {
@@ -116,7 +141,7 @@ class Participation
         } catch (AccessDeniedException $e) {
             throw new AccessDeniedException();
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
     }
 
@@ -130,7 +155,7 @@ class Participation
         $res->id_event          = $this->id_event;
         $res->id_participant    = $this->id_participant;
         $res->comments          = $this->comments;
-        $res->canceled         = $this->canceled;
+        $res->cancelled         = $this->cancelled;
         $res->present           = $this->present;
         return $res;
     }
@@ -180,7 +205,7 @@ class Participation
      *
      * @param bool|true $present
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      * @throws ValidDatasException
      */
     public function setPresent($present = true)
@@ -199,45 +224,57 @@ class Participation
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
     }
 
     /**
-     * Get if participation is canceled or not
-     * If canceled == 0 => Participant will be present  else if canceled == 1, Participant will not be present at the event
+     * Get if participation is cancelled or not
+     * If cancelled == 0 => Participant will be present  else if cancelled == 1, Participant will not be present at the event
      *
      * @return boolean
      */
-    public function iscanceled()
+    public function isCancelled()
     {
-        return $this->canceled;
+        return $this->cancelled;
     }
 
     /**
-     * Set if the participation is canceled or not.
-     * If canceled == 0 => Participant will be present else if canceled == 1, Participant will not be present at the event
-     * @param bool|true $canceled
+     * Set if the participation is cancelled or not.
+     * If cancelled == 0 => Participant will be present
+     * Else if cancelled == 1:
+     * Participant will not be present at the event
+     * If there is a waiting list, an email is sent to the next recipient
+     * @param bool|true $cancelled
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      * @throws ValidDatasException
      */
-    public function setCanceled($canceled = true)
+    public function setCancelled($cancelled = true)
     {
-        if($canceled != 0 && $canceled != 1){
+        if($cancelled != 0 && $cancelled != 1){
             throw new ValidDatasException("Data present is not valid. Boolean expected");
         }
         try {
-            $sql = "UPDATE ob_participation SET canceled = :canceled WHERE id = :id ";
+            $sql = "UPDATE ob_participation SET cancelled = :cancelled WHERE id = :id ";
             $req = $this->pdo->prepare($sql);
-            $req->bindParam(":canceled", $canceled);
+            $req->bindParam(":cancelled", $cancelled);
             $req->bindParam(":id", $this->id);
             $req->execute();
-            $this->canceled = $canceled;
+            $this->cancelled = $cancelled;
+
+            $email = new Email();
+            $email->prepareAndSendEmail("participant_annulation", array($this->participant->get()), $this->event);
+
+            if(($this->event->getNextRecipient(new DateTime($this->registration_date)) != false)
+                && count($this->event->getParticipants()) >= $this->event->getParticipantsMax()){
+                $nextRecipient = $this->event->getNextRecipient(new DateTime($this->registration_date));
+                $email->prepareAndSendEmail("participant_waiting_list_place_available", array($nextRecipient), $this->event);
+            }
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
     }
 
@@ -255,7 +292,7 @@ class Participation
      * @param string $comments
      *
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function setComments($comments)
     {
@@ -269,7 +306,7 @@ class Participation
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
     }
 
@@ -278,27 +315,27 @@ class Participation
      *
      * If we want to force a new participant, $force_creation need to be true. (Administrator only !)
      *
-     * @param Participant $participant
+     * @param ModelParticipant $participant
      * @param Event $event
      * @param bool|false $force_creation
      * @return array
      * @throws AccessDeniedException
      * @throws SQLErrorException
-     * @throws UnknowErrorException
-     * @throws EventIsCanceledException
+     * @throws UnknownErrorException
+     * @throws EventIscancelledException
      * @throws DataAlreadyExistInDatabaseException
      */
-    static function add(Participant $participant, Event $event, $force_creation = false)
+    static function add(ModelParticipant $participant, Event $event, $force_creation = false)
     {
-        $id_participant = $participant->getId();
+        $id_participant = $participant->id;
         $id_event = $event->getId();
 
-        if(!$force_creation && $participant->getStatus() == "ban"){
+        if(!$force_creation && $participant->status == "ban"){
             throw new AccessDeniedException("User ban, please contact the organizer");
         }
 
-        if($event->getcanceled() == true  || $event->getcanceled() == 1){
-            throw new EventIsCanceledException("Event is canceled");
+        if($event->getcancelled() == true  || $event->getcancelled() == 1){
+            throw new EventIscancelledException("Event is cancelled");
         }
         try {
             $sql = "INSERT INTO ob_participation (id_participant, id_event) VALUES (:id_participant, :id_event)";
@@ -306,10 +343,15 @@ class Participation
             $req->bindParam(":id_event", $id_event);
             $req->bindParam(":id_participant", $id_participant);
             if($req->execute()){
-                // Todo Send email
+                $email = new Email();
+                if(count($event->getParticipants()) >= $event->getParticipantsMax()){
+                    $email->prepareAndSendEmail('waiting_list', array($participant), $event);
+                } else {
+                    $email->prepareAndSendEmail('participant_registration', array($participant), $event);
+                }
                 return array("code" => 0, "message" => "ok");
             } else {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
         } catch (PDOException $e) {
             if($e->getCode() == 23000){
@@ -318,7 +360,7 @@ class Participation
                 throw new SQLErrorException($e->getMessage());
             }
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
     }
 

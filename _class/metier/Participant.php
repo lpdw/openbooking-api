@@ -16,10 +16,11 @@ namespace OpenBooking\_Class\Metier;
 use \PDO;
 use \PDOException;
 use \Exception;
+use \DateTime;
 use OpenBooking\_Exceptions\LoginException;
 use OpenBooking\_Exceptions\NullDatasException;
 use OpenBooking\_Exceptions\ValidDatasException;
-use OpenBooking\_Exceptions\UnknowErrorException;
+use OpenBooking\_Exceptions\UnknownErrorException;
 use OpenBooking\_Exceptions\SQLErrorException;
 use OpenBooking\_Exceptions\DataAlreadyExistInDatabaseException;
 use OpenBooking\_Class\Model\ModelParticipant;
@@ -29,7 +30,7 @@ include_once dirname(__FILE__) . "/../model/ModelParticipant.php";
 include_once dirname(__FILE__) . "/../../_exceptions/LoginException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/NullDatasException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/SQLErrorException.php";
-include_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/UnknownErrorException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/ValidDatasException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/DataAlreadyExistInDatabaseException.php";
 
@@ -95,7 +96,7 @@ class Participant
      * @param string $email
      * @param string $password
      * @throws LoginException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function __construct($email, $password)
     {
@@ -123,7 +124,7 @@ class Participant
         } catch (LoginException $e) {
             throw new LoginException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException("Unknow error");
+            throw new UnknownErrorException("Unknown error");
         }
     }
 
@@ -154,7 +155,7 @@ class Participant
      * @param string $password
      * @return array
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      * @throws ValidDatasException
      * @throws DataAlreadyExistInDatabaseException
      */
@@ -186,7 +187,7 @@ class Participant
                     throw new SQLErrorException($e->getMessage());
                 }
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
 
         } else {
@@ -199,7 +200,7 @@ class Participant
      *
      * @return ModelParticipation[]
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function getParticipations(){
 
@@ -219,7 +220,7 @@ class Participant
                     $tmp->id                = $row->id;
                     $tmp->id_event          = $row->id_event;
                     $tmp->id_participant    = $row->id_participant;
-                    $tmp->canceled         = $row->canceled;
+                    $tmp->cancelled         = $row->cancelled;
                     $tmp->comments          = $row->comments;
                     $tmp->present           = $row->present;
                     $return[] = $tmp;
@@ -230,7 +231,7 @@ class Participant
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
     }
 
@@ -257,7 +258,7 @@ class Participant
      * @param string $first_name
      * @throws NullDatasException
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function setFirstName($first_name)
     {
@@ -272,7 +273,7 @@ class Participant
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
         } else {
             throw new NullDatasException("First name cannot be empty");
@@ -293,7 +294,7 @@ class Participant
      * @param string $last_name
      * @throws NullDatasException
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function setLastName($last_name)
     {
@@ -308,7 +309,7 @@ class Participant
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
         } else {
             throw new NullDatasException("Last name cannot be empty");
@@ -330,7 +331,7 @@ class Participant
      * @throws NullDatasException
      * @throws ValidDatasException
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function setEmail($email)
     {
@@ -347,7 +348,7 @@ class Participant
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
             $this->email = $email;
         } else {
@@ -360,7 +361,7 @@ class Participant
      * @param string $password
      * @throws NullDatasException
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function setPassword($password)
     {
@@ -374,7 +375,7 @@ class Participant
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
         } else {
             throw new NullDatasException("Password cannot be empty");
@@ -403,7 +404,7 @@ class Participant
      * Set participant comments and save it into database
      * @param $comments
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function setComments($comments)
     {
@@ -417,7 +418,7 @@ class Participant
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException();
+            throw new UnknownErrorException();
         }
     }
 
@@ -434,7 +435,7 @@ class Participant
      * Set the participant status and save it into the database
      * @param  string $status Possible values  : 'verified', 'unverified', 'ban'
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      * @throws ValidDatasException
      */
     public function setStatus($status)
@@ -450,7 +451,7 @@ class Participant
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
         } else {
             throw new ValidDatasException("Status should be verified', 'unverified' or 'ban'");

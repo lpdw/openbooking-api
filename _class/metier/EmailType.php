@@ -17,7 +17,7 @@ use \Exception;
 use \PDOException;
 use \DateTime;
 use OpenBooking\_Exceptions\SQLErrorException;
-use OpenBooking\_Exceptions\UnknowErrorException;
+use OpenBooking\_Exceptions\UnknownErrorException;
 use OpenBooking\_Exceptions\NullDatasException;
 use OpenBooking\_Exceptions\DataAlreadyExistInDatabaseException;
 
@@ -75,7 +75,7 @@ Class EmailType
      * EmailType constructor.
      * @param $type
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      */
     public function __construct($type)
     {
@@ -94,12 +94,12 @@ Class EmailType
                 $this->body = $res->body;
                 $this->last_edit = $res->last_edit;
             } else {
-                throw new UnknowErrorException("Unknow type");
+                throw new UnknownErrorException("Unknown type");
             }
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknowErrorException("Unknow error");
+            throw new UnknownErrorException("Unknown error");
         }
     }
 
@@ -113,7 +113,7 @@ Class EmailType
      * @return mixed array
      * @throws NullDatasException
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      * @throws DataAlreadyExistInDatabaseException
      */
     public static function add($type, $object, $body)
@@ -147,7 +147,7 @@ Class EmailType
                     throw new SQLErrorException($e->getMessage());
                 }
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
         }else{
             throw new NullDatasException("All fields must be filled");
@@ -193,7 +193,7 @@ Class EmailType
      * Set EmailType object and save it into database
      * @param string $object
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      * @throws NullDatasException
      */
     public function setObject($object)
@@ -210,7 +210,7 @@ Class EmailType
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
         } else {
             throw new NullDatasException("You must chose an object");
@@ -230,7 +230,7 @@ Class EmailType
      * Set EmailType body and save it into database
      * @param string $body
      * @throws SQLErrorException
-     * @throws UnknowErrorException
+     * @throws UnknownErrorException
      * @throws NullDatasException
      */
     public function setBody($body)
@@ -247,7 +247,7 @@ Class EmailType
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
-                throw new UnknowErrorException();
+                throw new UnknownErrorException();
             }
         } else {
             throw new NullDatasException("You must write a body");

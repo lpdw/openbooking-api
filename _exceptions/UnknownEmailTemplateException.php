@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Event is canceled Exception File
+ * Unknown email template Exception
  * Date: 05/01/2016
  * Project: OpenBooking
  * @copyright 2015 - 2016 OpenBooking Group
@@ -11,18 +11,19 @@ namespace OpenBooking\_Exceptions;
 use \Exception;
 
 /**
- * Class EventIsCanceledException
- * @package OpenBooking\_Exceptions
+ * Class UnknownEmailTemplateException
+ * @package OpenBooking\Exceptions
  */
-class EventIsCanceledException extends Exception
+
+class UnknownEmailTemplateException extends Exception
 {
     /**
-     * EventIsCanceledException constructor.
+     * UnknownEmailTemplateException constructor.
      * @param string $message
      * @param int $code
      * @param Exception|null $previous
      */
-    public function __construct($message = "Event is canceled", $code = -10, Exception $previous = null) {
+    public function __construct($message = "Specified template is unknown. Can't send email", $code = -8, Exception $previous = null) {
         parent::__construct($message, $code, $previous);
     }
 
