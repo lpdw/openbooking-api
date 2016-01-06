@@ -41,8 +41,8 @@ Class ModelParticipant{
     public $email;
 
     /**
-     * Participant registration timestamp
-     * @var int Timestamp required
+     * Participant registration date
+     * @var DateTime
      */
     public $registration_date;
 

@@ -30,13 +30,13 @@ class Email{
 
     /**
      * Email object
-     * @var string $object
+     * @var string
      */
     private $object;
 
     /**
      * Email body
-     * @var string body
+     * @var string
      */
     private $body;
 

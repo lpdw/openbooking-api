@@ -63,8 +63,8 @@ class Participant
     private $email;
 
     /**
-     * Participant registration timestamp
-     * @var int Timestamp required
+     * Participant registration date
+     * @var DateTime
      */
     private $registration_date;
 
@@ -375,8 +375,8 @@ class Participant
     }
 
     /**
-     * Get registration date. Format : Timestamp
-     * @return int
+     * Get registration date. Format : DateTime
+     * @return DateTime
      */
     public function getRegistrationDate()
     {

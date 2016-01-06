@@ -60,7 +60,7 @@ Class Event
 
     /**
      * Event date
-     * @var int Timestamp required
+     * @var DateTime
      */
     private $date;
 
@@ -84,7 +84,7 @@ Class Event
 
     /**
      * Event creation date
-     * @var int Timestamp required
+     * @var DateTime
      */
     private $creation_date;
 
@@ -108,7 +108,7 @@ Class Event
 
     /**
      * Event constructor.
-     * @param $id
+     * @param int $id
      * @throws SQLErrorException
      * @throws UnknowErrorException
      */
@@ -169,15 +169,15 @@ Class Event
      * Create a new Event in database
      *
      * If a new Event was created , array("code" => 0, "message" => "ok") is returned, otherwise an exception is thrown
-     * @param $name
-     * @param $description
-     * @param $localisation
-     * @param $date
-     * @param $participants_max
-     * @param $organizer
-     * @param $organizer_email
-     * @param $open_to_registration
-     * @return array
+     * @param string $name
+     * @param string $description
+     * @param string $localisation
+     * @param DateTime $date
+     * @param int $participants_max
+     * @param string $organizer
+     * @param string $organizer_email
+     * @param boolean $open_to_registration
+     * @return mixed array
      * @throws NullDatasException
      * @throws SQLErrorException
      * @throws UnknowErrorException
@@ -237,16 +237,16 @@ Class Event
     }
 
     /**
-     * Update an event
-     * @param $name
-     * @param $description
-     * @param $localisation
-     * @param $date
-     * @param $participants_max
-     * @param $organizer
-     * @param $organizer_email
-     * @param $open_to_registration
-     * @return int
+     * Update an event and save it into database , array("code" => 0, "message" => "ok") is returned, otherwise an exception is thrown
+     * @param string $name
+     * @param string $description
+     * @param string $localisation
+     * @param DateTime $date
+     * @param int $participants_max
+     * @param string $organizer
+     * @param string $organizer_email
+     * @param boolean $open_to_registration
+     * @return mixed array
      * @throws NullDatasException
      * @throws SQLErrorException
      * @throws UnknowErrorException
@@ -288,7 +288,7 @@ Class Event
                 //Todo : Envoyer un mail
 
                 $req->execute();
-                return 0;
+                return array("code" => 0, "message" => "ok");
 
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
@@ -302,7 +302,7 @@ Class Event
 
     /**
      * Get all the Event participants
-     * @return array of Participant
+     * @return Participant array
      * @throws SQLErrorException
      * @throws UnknowErrorException
      */
@@ -378,7 +378,7 @@ Class Event
     }
 
     /**
-     * Get Event date. Format: Timestamp
+     * Get Event date. Format: DateTime
      * @return int
      */
     public function getDate()
@@ -414,7 +414,7 @@ Class Event
     }
 
     /**
-     * Get Event creation date. Format: Timestamp
+     * Get Event creation date. Format: DateTime
      * @return int
      */
     public function getCreationDate()
