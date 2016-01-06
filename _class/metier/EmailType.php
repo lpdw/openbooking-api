@@ -14,9 +14,13 @@
 namespace OpenBooking\_Class\Metier;
 use \PDO;
 use \Exception;
+use \PDOException;
+use \DateTime;
 use OpenBooking\_Exceptions\SQLErrorException;
 use OpenBooking\_Exceptions\UnknowErrorException;
 use OpenBooking\_Exceptions\NullDatasException;
+use OpenBooking\_Exceptions\DataAlreadyExistInDatabaseException;
+
 
 /**
  * Class EmailType
@@ -92,10 +96,61 @@ Class EmailType
             } else {
                 throw new UnknowErrorException("Unknow type");
             }
-        } catch (SQLErrorException $e) {
+        } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
             throw new UnknowErrorException("Unknow error");
+        }
+    }
+
+    /**
+     * Create an EmailType and save it into databse
+     *
+     * If a new Event was created , array("code" => 0, "message" => "ok") is returned, otherwise an exception is thrown
+     * @param string $type
+     * @param string $object
+     * @param string $body
+     * @return mixed array
+     * @throws NullDatasException
+     * @throws SQLErrorException
+     * @throws UnknowErrorException
+     * @throws DataAlreadyExistInDatabaseException
+     */
+    public static function add($type, $object, $body)
+    {
+        if(strlen(trim($type)) > 0
+            && strlen(trim($object)) > 0
+            && strlen(trim($body)) > 0
+        ) {
+            try{
+                $pdo = $GLOBALS["pdo"];
+                $sql = "INSERT INTO ob_email_type (type,
+                                                   object,
+                                                   body)
+                        VALUES (:type,
+                                :object,
+                                :body)";
+
+                $req = $pdo->prepare($sql);
+
+                $req->bindParam(':type', $type);
+                $req->bindParam(':object', $object);
+                $req->bindParam(':body', $body);
+
+                $req->execute();
+                return array("code" => 0, "message" => "ok");
+
+            } catch (PDOException $e) {
+                if ($e->getCode() == 23000) {
+                    throw new DataAlreadyExistInDatabaseException("Duplicate entry for this type.");
+                } else {
+                    throw new SQLErrorException($e->getMessage());
+                }
+            } catch (Exception $e) {
+                throw new UnknowErrorException();
+            }
+        }else{
+            throw new NullDatasException("All fields must be filled");
         }
     }
 
@@ -126,33 +181,6 @@ Class EmailType
     }
 
     /**
-     * Set EmailType type and save it into database
-     * @param string $type
-     * @throws SQLErrorException
-     * @throws UnknowErrorException
-     * @throws NullDatasException
-     */
-    public function setType($type)
-    {
-        if(strlen(trim($type)) > 0) {
-            try {
-                $sql = "UPDATE ob_email_type SET type = :type WHERE id = :id";
-                $req = $this->pdo->prepare($sql);
-                $req->bindParam(":type", $type);
-                $req->bindParam(":id", $this->id);
-                $req->execute();
-                $this->type = $type;
-            } catch (SQLErrorException $e) {
-                throw new SQLErrorException($e->getMessage());
-            } catch (Exception $e) {
-                throw new UnknowErrorException();
-            }
-        } else {
-            throw new NullDatasException("You must chose a type");
-        }
-    }
-
-    /**
      * Get EmailType object
      * @return string
      */
@@ -178,7 +206,8 @@ Class EmailType
                 $req->bindParam(":id", $this->id);
                 $req->execute();
                 $this->object = $object;
-            } catch (SQLErrorException $e) {
+                $this->last_edit = new DateTime('now');
+            } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
                 throw new UnknowErrorException();
@@ -214,7 +243,8 @@ Class EmailType
                 $req->bindParam(":id", $this->id);
                 $req->execute();
                 $this->body = $body;
-            } catch (SQLErrorException $e) {
+                $this->last_edit = new DateTime('now');
+            } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
                 throw new UnknowErrorException();
@@ -231,32 +261,5 @@ Class EmailType
     public function getLastEdit()
     {
         return $this->last_edit;
-    }
-
-    /**
-     * Set EmailType last edit date and save it into database
-     * @param int $last_edit
-     * @throws SQLErrorException
-     * @throws UnknowErrorException
-     * @throws NullDatasException
-     */
-    public function setLastEdit($last_edit)
-    {
-        if(strlen(trim($last_edit)) > 0) {
-            try {
-                $sql = "UPDATE ob_email_type SET last_edit = :last_edit WHERE id = :id";
-                $req = $this->pdo->prepare($sql);
-                $req->bindParam(":last_edit", $last_edit);
-                $req->bindParam(":id", $this->id);
-                $req->execute();
-                $this->last_edit = $last_edit;
-            } catch (SQLErrorException $e) {
-                throw new SQLErrorException($e->getMessage());
-            } catch (Exception $e) {
-                throw new UnknowErrorException();
-            }
-        } else {
-            throw new NullDatasException("Last edit date can't be blank");
-        }
     }
 }
