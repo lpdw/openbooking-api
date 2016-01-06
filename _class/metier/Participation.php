@@ -113,7 +113,7 @@ class Participation
 
     /**
      * Get the participations infos
-     * @return model\ModelParticipation
+     * @return ModelParticipation
      */
     public function get(){
         $res = new ModelParticipation();
