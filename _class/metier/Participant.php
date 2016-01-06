@@ -21,6 +21,7 @@ use OpenBooking\_Exceptions\NullDatasException;
 use OpenBooking\_Exceptions\ValidDatasException;
 use OpenBooking\_Exceptions\UnknowErrorException;
 use OpenBooking\_Exceptions\SQLErrorException;
+use OpenBooking\_Exceptions\DataAlreadyExistInDatabaseException;
 use OpenBooking\_Class\Model\ModelParticipant;
 use OpenBooking\_Class\Model\ModelParticipation;
 
@@ -30,6 +31,7 @@ include_once dirname(__FILE__) . "/../../_exceptions/NullDatasException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/SQLErrorException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/ValidDatasException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/DataAlreadyExistInDatabaseException.php";
 
 /**
  * Class Participant
@@ -154,6 +156,7 @@ class Participant
      * @throws SQLErrorException
      * @throws UnknowErrorException
      * @throws ValidDatasException
+     * @throws DataAlreadyExistInDatabaseException
      */
     static function add($first_name, $last_name, $email, $password)
     {
@@ -177,7 +180,11 @@ class Participant
                 $req->execute();
                 return array("code" => 0, "message" => "ok");
             } catch (PDOException $e) {
-                throw new SQLErrorException($e->getMessage());
+                if($e->getCode() == 23000){
+                    throw new DataAlreadyExistInDatabaseException("Duplicate entry for this user.");
+                } else {
+                    throw new SQLErrorException($e->getMessage());
+                }
             } catch (Exception $e) {
                 throw new UnknowErrorException();
             }
@@ -212,7 +219,7 @@ class Participant
                     $tmp->id                = $row->id;
                     $tmp->id_event          = $row->id_event;
                     $tmp->id_participant    = $row->id_participant;
-                    $tmp->cancelled         = $row->cancelled;
+                    $tmp->canceled         = $row->canceled;
                     $tmp->comments          = $row->comments;
                     $tmp->present           = $row->present;
                     $return[] = $tmp;

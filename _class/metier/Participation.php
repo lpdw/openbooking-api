@@ -18,7 +18,16 @@ use OpenBooking\_Exceptions\AccessDeniedException;
 use OpenBooking\_Exceptions\SQLErrorException;
 use OpenBooking\_Exceptions\UnknowErrorException;
 use OpenBooking\_Exceptions\ValidDatasException;
+use OpenBooking\_Exceptions\DataAlreadyExistInDatabaseException;
+use OpenBooking\_Exceptions\EventIsCanceledException;
 use OpenBooking\_Class\Model\ModelParticipation;
+
+include_once dirname(__FILE__) . "/../../_exceptions/AccessDeniedException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/SQLErrorException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/ValidDatasException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/EventIsCanceledException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/DataAlreadyExistInDatabaseException.php";
 
 /**
  * Class Participation
@@ -51,12 +60,12 @@ class Participation
     private $comments;
 
     /**
-     * Participation cancelled
+     * Participation canceled
      *
-     * If cancelled == 0 => Participation NOT cancelled else if cancelled == 1, participation was cancelled
-     * @var bool $cancelled
+     * If canceled == 0 => Participation NOT canceled else if canceled == 1, participation was canceled
+     * @var bool $canceled
      */
-    private $cancelled;
+    private $canceled;
 
     /**
      * Participant present
@@ -94,7 +103,7 @@ class Participation
             if(isset($res->id)){
                 $this->id_participant = $id_participant;
                 $this->id_event = $id_event;
-                $this->cancelled = $res->cancelled;
+                $this->canceled = $res->canceled;
                 $this->id = $res->id;
                 $this->comments = $res->comments;
                 $this->present = $res->present;
@@ -121,7 +130,7 @@ class Participation
         $res->id_event          = $this->id_event;
         $res->id_participant    = $this->id_participant;
         $res->comments          = $this->comments;
-        $res->cancelled         = $this->cancelled;
+        $res->canceled         = $this->canceled;
         $res->present           = $this->present;
         return $res;
     }
@@ -169,12 +178,12 @@ class Participation
      * Set if participant was present and save it into database
      * If present == 0 => Participant wasn't at the event else if present == 1, Participant was present at the event
      *
-     * @param boolean $present
+     * @param bool|true $present
      * @throws SQLErrorException
      * @throws UnknowErrorException
      * @throws ValidDatasException
      */
-    public function setPresent($present)
+    public function setPresent($present = true)
     {
         if($present != 0 && $present != 1){
             throw new ValidDatasException("Data present is not valid. Boolean expected");
@@ -195,37 +204,36 @@ class Participation
     }
 
     /**
-     * Get if participation is cancelled or not
-     * If cancelled == 0 => Participant will be present  else if cancelled == 1, Participant will not be present at the event
+     * Get if participation is canceled or not
+     * If canceled == 0 => Participant will be present  else if canceled == 1, Participant will not be present at the event
      *
      * @return boolean
      */
-    public function isCancelled()
+    public function iscanceled()
     {
-        return $this->cancelled;
+        return $this->canceled;
     }
 
     /**
-     * Set if the participation is cancelled or not.
-     * If cancelled == 0 => Participant will be present else if cancelled == 1, Participant will not be present at the event
-     * @param boolean $cancelled
-     *
+     * Set if the participation is canceled or not.
+     * If canceled == 0 => Participant will be present else if canceled == 1, Participant will not be present at the event
+     * @param bool|true $canceled
      * @throws SQLErrorException
      * @throws UnknowErrorException
      * @throws ValidDatasException
      */
-    public function setCancelled($cancelled)
+    public function setCanceled($canceled = true)
     {
-        if($cancelled != 0 && $cancelled != 1){
+        if($canceled != 0 && $canceled != 1){
             throw new ValidDatasException("Data present is not valid. Boolean expected");
         }
         try {
-            $sql = "UPDATE ob_participation SET cancelled = :cancelled WHERE id = :id ";
+            $sql = "UPDATE ob_participation SET canceled = :canceled WHERE id = :id ";
             $req = $this->pdo->prepare($sql);
-            $req->bindParam(":cancelled", $cancelled);
+            $req->bindParam(":canceled", $canceled);
             $req->bindParam(":id", $this->id);
             $req->execute();
-            $this->cancelled = $cancelled;
+            $this->canceled = $canceled;
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
@@ -277,6 +285,8 @@ class Participation
      * @throws AccessDeniedException
      * @throws SQLErrorException
      * @throws UnknowErrorException
+     * @throws EventIsCanceledException
+     * @throws DataAlreadyExistInDatabaseException
      */
     static function add(Participant $participant, Event $event, $force_creation = false)
     {
@@ -285,6 +295,10 @@ class Participation
 
         if(!$force_creation && $participant->getStatus() == "ban"){
             throw new AccessDeniedException("User ban, please contact the organizer");
+        }
+
+        if($event->getcanceled() == true  || $event->getcanceled() == 1){
+            throw new EventIsCanceledException("Event is canceled");
         }
         try {
             $sql = "INSERT INTO ob_participation (id_participant, id_event) VALUES (:id_participant, :id_event)";
@@ -298,7 +312,11 @@ class Participation
                 throw new UnknowErrorException();
             }
         } catch (PDOException $e) {
-            throw new SQLErrorException($e->getMessage());
+            if($e->getCode() == 23000){
+                throw new DataAlreadyExistInDatabaseException("Duplicate entry for this user.");
+            }else{
+                throw new SQLErrorException($e->getMessage());
+            }
         } catch (Exception $e) {
             throw new UnknowErrorException();
         }

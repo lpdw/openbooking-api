@@ -20,31 +20,31 @@ Class ModelEvent
 {
     /**
      * Event ID
-     * @var int
+     * @var int $id
      */
     public $id;
 
     /**
      * Event name
-     * @var string
+     * @var string $name
      */
     public $name;
 
     /**
      * Event description
-     * @var string
+     * @var string $description
      */
     public $description;
 
     /**
      * Event localisation
-     * @var string
+     * @var string $localisation
      */
     public $localisation;
 
     /**
      * Event date
-     * @var DateTime
+     * @var int $date DateTime
      */
     public $date;
 
@@ -62,25 +62,25 @@ Class ModelEvent
 
     /**
      * Email address of Event organizer
-     * @var string
+     * @var string $organizer_email
      */
     public $organizer_email;
 
     /**
      * Event creation date
-     * @var DateTime
+     * @var int $creation_date Timestamp required
      */
     public $creation_date;
 
     /**
      * Event registration status (1: opened or 0: closed)
-     * @var int
+     * @var int $open_to_registration
      */
     public $open_to_registration;
 
     /**
-     * Event status (1: cancelled or 0: not cancelled)
-     * @var int
+     * Event status (1: canceled or 0: not canceled)
+     * @var int $canceled
      */
-    public $cancelled;
+    public $canceled;
 }
