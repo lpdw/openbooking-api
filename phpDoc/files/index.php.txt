@@ -1,0 +1,31 @@
+<?php
+/**
+ * Date: 04/01/2016
+ * Project: OpenBooking
+ * @copyright 2015 - 2016 OpenBooking Group
+ */
+
+   //Todo : Routeur pour chacun des appels à l'API
+
+
+include "_include/bddConnect.php";
+require_once "_class/metier/Participant.php";
+require_once "_class/metier/Participation.php";
+require_once "_class/metier/Event.php";
+
+use OpenBooking\_Class\Metier\Participant;
+use OpenBooking\_Class\Metier\Participation;
+use OpenBooking\_Class\Metier\Event;
+
+//$user = new Participant("eliaslao@gmail.com", "1234");
+//$event = new Event(1);
+//
+//Participation::add($user, $event);
+//
+
+$user = new Participant("elias@liwio.com", "2004");
+$event = new Event(1);
+
+Participation::add($user, $event);
+
+
