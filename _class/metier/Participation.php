@@ -274,7 +274,7 @@ class Participation
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException();
+            throw new UnknownErrorException($e->getMessage());
         }
     }
 

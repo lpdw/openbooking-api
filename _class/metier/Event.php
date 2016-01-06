@@ -553,7 +553,7 @@ Class Event
             $req->execute();
 
             $email = new Email();
-            $email->prepareAndSendEmail('event-annulation', $this->getParticipants(), $this);
+            $email->prepareAndSendEmail('event_annulation', $this->getParticipants(), $this);
 
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());

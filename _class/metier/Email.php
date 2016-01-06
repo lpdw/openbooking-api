@@ -158,7 +158,7 @@ class Email{
             $this->body = $res->body;
             $this->object = $res->object;
         }else{
-            throw new UnknownErrorException();
+            throw new UnknownErrorException("Unknown type. Please correct it or create it.");
         }
     }
 
