@@ -1,8 +1,4 @@
-# <center> OpenBooking API
-
-![alt text][logo]
-
-[logo]: https://github.com/lpdw/openbooking-api/blob/dev/LOGO.png "Logo" </center>
+# <center> OpenBooking API</center>
 
 
 API affiliated with the OpenBooking WordPress plugin (https://github.com/lpdw/openbooking)
