@@ -162,7 +162,7 @@ class Participant
             $pdo = $GLOBALS['pdo'];
             $sql = "SELECT id, first_name, last_name, email, registration_date, comments, status from ob_participant";
             $sql .= (isset($limit) ? " LIMIT ".$limit : "" );
-            $sql .= (isset($offset) ? " OFFSET ".$offset : "");
+            $sql .= (isset($offset) && isset($limit) ? " OFFSET ".($offset-1)*$limit : "");
             $req = $pdo->prepare($sql);
             $req->execute();
             $req->setFetchMode((PDO::FETCH_OBJ));

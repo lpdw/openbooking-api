@@ -1,3 +1,6 @@
+# Ignore conf.ini , use installation tool ( php installation/index.php )
+conf.ini
+
 # Created by https://www.gitignore.io/api/windows,linux,osx,intellij,netbeans,sublimetext,wordpress,phpstorm,notepadpp
 
 ### Windows ###

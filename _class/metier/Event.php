@@ -1,6 +1,6 @@
 <?php
 /**
- * Participant Class File.
+ * Event Class File.
  * @version 1.0
  * @author Elias Cédric Laouiti
  * @author Maxime Florile
@@ -258,7 +258,7 @@ Class Event
             $pdo = $GLOBALS["pdo"];
             $sql = ($all ? "SELECT * FROM ob_event" : "SELECT * FROM ob_event WHERE open_to_registration = 1 AND cancelled != 1");
             $sql .= (isset($limit) ? " LIMIT ".$limit : "" );
-            $sql .= (isset($offset) ? " OFFSET ".$offset : "");
+            $sql .= (isset($offset) && isset($limit) ? " OFFSET ".($offset-1)*$limit : "");
             $req = $pdo->prepare($sql);
             $req->execute();
             $req->setFetchMode(PDO::FETCH_OBJ);
