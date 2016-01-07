@@ -148,19 +148,24 @@ class Participant
     /**
      * Get all participants in database, password field excluded
      * @return ModelParticipant[]
+     * @param null | int $limit
+     * @param null | int $offset
      * @throws SQLErrorException
      * @throws UnknownErrorException
      */
-    public static function getAll()
+    public static function getAll($limit = null, $offset = null)
     {
         try {
             $allParticipants = array();
             $pdo = $GLOBALS['pdo'];
             $sql = "SELECT id, first_name, last_name, email, registration_date, comments, status from ob_participant";
+            $sql .= ((isset($limit) && isset($offset)) ? " LIMIT ".$limit." OFFSET ".$offset : "" );
+
             $req = $pdo->prepare($sql);
             $req->execute();
             $req->setFetchMode((PDO::FETCH_OBJ));
             $res = $req->fetchall();
+
             foreach ($res as $key => $participant) {
                 $allParticipants[$key] = new ModelParticipant();
                 foreach ($participant as $field => $value) {
@@ -168,6 +173,7 @@ class Participant
                 }
             }
             return $allParticipants;
+
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
