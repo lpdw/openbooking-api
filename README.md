@@ -1,4 +1,10 @@
 # OpenBooking API
+
+![alt text][logo]
+
+[logo]: https://github.com/lpdw/openbooking-api/LOGO.png "Logo"
+
+
 API affiliated with the OpenBooking WordPress plugin (https://github.com/lpdw/openbooking)
 
 This API is an open source alternative solution for any event management, specificly for booking management.
