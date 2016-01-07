@@ -54,15 +54,16 @@ You will have to fill EmailType table in OpenBooking database to create/manage y
 - {{recipientFirstName}}
 - {{recipientLastName}}
 
+These tags will be replaced by associated datas in the sent mails.
 You will have the default templates, which are:
 
 - remind1day: 1 day before event reminder
 - remind7day: 7 days before event reminder
-- waiting_list:
-- participant_registration
-- participant_annulation
-- event_annulation
-- participant\_waiting\_list\_place_available
+- waiting_list: Getting in waiting list notification
+- participant_registration: Registration confirmation
+- participant_annulation: Annulation confirmation
+- event_annulation: Event annulation notification
+- participant\_waiting\_list\_place_available: Getting out of waiting list notification
 
 
 ###Specification
@@ -78,7 +79,7 @@ Employed technologies
 
 An error handling system has been applied, working with error codes, to make the API debugging easier for developers.
 
-Here is the exceptions list, with associated code and description:
+Here is the exceptions list, with associated codes and descriptions:
 
 - NullDatasException | -2 : The parameters datas are invalid or empty
 - LoginException | -3 : The login process failed (bad credentials)
@@ -96,7 +97,7 @@ Here is the exceptions list, with associated code and description:
 # API OpenBooking
 API associée au plugin WordPress OpenBookig (https://github.com/lpdw/openbooking)
 
-Cete API destinée à offrir une solution open source alternative pour la gestion d'événement, et en particulier la gestion des réservations.
+Cette API est destinée à offrir une solution open source alternative pour la gestion d'événement, et en particulier pour la gestion des réservations.
 
 ## Auteurs
 
@@ -148,6 +149,7 @@ Vous devrez compléter la table EmailType dans la base de données pour créer v
 - {{recipientFirstName}}
 - {{recipientLastName}}
 
+Ces tags seront remplacés par les données associées dans les emails envoyés.
 Vous disposerez des modèles par défaut, à savoir:
 
 - remind1day: Rappel 1 jour avant l'événement
@@ -170,7 +172,7 @@ Technologies utilisées
 ### La gestion des erreurs
 
 Un système de code d'erreurs a été mis en place afin de faciliter le debug pour les développeurs.
-Voici la liste des exceptions, avec leurs codes et la description associée:
+Voici la liste des exceptions et de leurs codes et descriptions:
 
 - NullDatasException | -2 : Les données passées en paramètres sont null ou inexistantes
 - LoginException | -3 : Erreur d'authentification (mauvais identifiants)
