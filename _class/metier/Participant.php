@@ -146,6 +146,36 @@ class Participant
     }
 
     /**
+     * Get all participants in database, password field excluded
+     * @return ModelParticipant[]
+     * @throws SQLErrorException
+     * @throws UnknownErrorException
+     */
+    public static function getAll()
+    {
+        try {
+            $allParticipants = array();
+            $pdo = $GLOBALS['pdo'];
+            $sql = "SELECT id, first_name, last_name, email, registration_date, comments, status from ob_participant";
+            $req = $pdo->prepare($sql);
+            $req->execute();
+            $req->setFetchMode((PDO::FETCH_OBJ));
+            $res = $req->fetchall();
+            foreach ($res as $key => $participant) {
+                $allParticipants[$key] = new ModelParticipant();
+                foreach ($participant as $field => $value) {
+                    $allParticipants[$key]->{$field} = $value;
+                }
+            }
+            return $allParticipants;
+        } catch (PDOException $e) {
+            throw new SQLErrorException($e->getMessage());
+        } catch (Exception $e) {
+            throw new UnknownErrorException();
+        }
+    }
+
+    /**
      * Create a new user.
      *
      * If a new user was created , array("code" => 0, "message" => "ok") is returned, otherwise an exception is thrown
