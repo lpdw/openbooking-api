@@ -15,6 +15,14 @@ CAYET Matthieu
 
 POULAIN Enguerran
 
+##Specification
+
+Employed technologies
+
+- PHP 5.6
+- MySQL 5.5
+- [PHP Mailer 5.2](https://github.com/PHPMailer/PHPMailer/ "PHPMailer")
+
 ## Installation
 Open a terminal in the API's repository, and then reach to installation and launch installation:
 > \> cd installation
@@ -67,16 +75,6 @@ You will have the default templates, which are:
 - event_annulation: Event annulation notification
 - participant\_waiting\_list\_place_available: Getting out of waiting list notification
 
-
-###Specification
-
-Employed technologies
-
-- PHP 5.6
-- MySQL 5.5
-- [PHP Mailer 5.2](https://github.com/PHPMailer/PHPMailer/ "PHPMailer")
-
-
 ### Error handling
 
 An error handling system has been applied, working with error codes, to make the API debugging easier for developers.
@@ -110,6 +108,14 @@ FLORILE Maxime
 CAYET Matthieu
 
 POULAIN Enguerran
+
+##Spécification
+
+Technologies utilisées
+
+- PHP 5.6
+- MySQL 5.5
+- [PHP Mailer 5.2](https://github.com/PHPMailer/PHPMailer/ "PHPMailer")
 
 ## Installation
 
@@ -161,15 +167,6 @@ Vous disposerez des modèles par défaut, à savoir:
 - participant_annulation: Confirmation d'annulation
 - event_annulation: Notification d'annulation de l'événement
 - participant\_waiting\_list\_place_available: Notification de sortie de la liste d'attente après qu'une place ce soit liberée
-
-###Spécification
-
-Technologies utilisées
-
-- PHP 5.6
-- MySQL 5.5
-- [PHP Mailer 5.2](https://github.com/PHPMailer/PHPMailer/ "PHPMailer")
-
 
 ### La gestion des erreurs
 

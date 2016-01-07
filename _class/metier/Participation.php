@@ -31,6 +31,8 @@ include_once dirname(__FILE__) . "/../../_exceptions/ValidDatasException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/EventIscancelledException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/DataAlreadyExistInDatabaseException.php";
 
+require_once dirname(__FILE__) . "/../../_include/bddConnect.php";
+
 /**
  * Class Participation
  * @package OpenBooking\_Class\Metier

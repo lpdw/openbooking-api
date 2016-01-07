@@ -31,6 +31,8 @@ include_once dirname(__FILE__) . "/../../_exceptions/SQLErrorException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/UnknownErrorException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/DataAlreadyExistInDatabaseException.php";
 
+require_once dirname(__FILE__) . "/../../_include/bddConnect.php";
+
 /**
  * Class Event
  * @package OpenBooking\_Class\Metier
@@ -250,11 +252,13 @@ Class Event
      * @throws SQLErrorException
      * @throws UnknownErrorException
      */
-    public static function getAll($all = false)
+    public static function getAll($all = false, $limit = null, $offset = null)
     {
         try {
             $pdo = $GLOBALS["pdo"];
             $sql = ($all ? "SELECT * FROM ob_event" : "SELECT * FROM ob_event WHERE open_to_registration = 1 AND cancelled != 1");
+            $sql .= (isset($limit) ? " LIMIT ".$limit : "" );
+            $sql .= (isset($offset) ? " OFFSET ".$offset : "");
             $req = $pdo->prepare($sql);
             $req->execute();
             $req->setFetchMode(PDO::FETCH_OBJ);
@@ -290,7 +294,7 @@ Class Event
      * @throws SQLErrorException
      * @throws UnknownErrorException
      */
-    public static function getByDate($days)
+    public static function getByDaysLeft($days)
     {
         try {
             $pdo = $GLOBALS["pdo"];

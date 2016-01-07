@@ -23,6 +23,8 @@ use PHPMailer;
 
 require dirname(__FILE__).'/../../vendor/autoload.php';
 
+require_once dirname(__FILE__) . "/../../_include/bddConnect.php";
+
 /**
  * Class Email
  * @package OpenBooking\_Class\Metier
