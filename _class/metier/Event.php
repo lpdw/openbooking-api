@@ -284,6 +284,48 @@ Class Event
     }
 
     /**
+     * Get all events which take place in less than $days days
+     * @param int $days
+     * @return ModelEvent[]
+     * @throws SQLErrorException
+     * @throws UnknownErrorException
+     */
+    public static function getByDate($days)
+    {
+        try {
+            $pdo = $GLOBALS["pdo"];
+            $sql = "SELECT * FROM ob_event WHERE DATEDIFF(date, now())< :date AND cancelled !=1";
+            $req = $pdo->prepare($sql);
+            $req->bindParam(":date", $days);
+            $req->execute();
+            $req->setFetchMode(PDO::FETCH_OBJ);
+            $rows = $req->fetchAll();
+            $return = [];
+            foreach ($rows AS $row) {
+                print_r($row);
+                $tmp = new ModelEvent();
+                $tmp->id = $row->id;
+                $tmp->name = $row->name;
+                $tmp->description = $row->description;
+                $tmp->localisation = $row->localisation;
+                $tmp->date = $row->date;
+                $tmp->participants_max = $row->participants_max;
+                $tmp->organizer = $row->organizer;
+                $tmp->organizer_email = $row->organizer_email;
+                $tmp->creation_date = $row->creation_date;
+                $tmp->open_to_registration = $row->open_to_registration;
+                $tmp->cancelled = $row->cancelled;
+                $return[] = $tmp;
+            }
+            return $return;
+        } catch (PDOException $e) {
+            throw new SQLErrorException($e->getMessage());
+        } catch (Exception $e) {
+            throw new UnknownErrorException();
+        }
+    }
+
+    /**
      * Update an event and save it into database , array("code" => 0, "message" => "ok") is returned, otherwise an exception is thrown
      * @param string $name
      * @param string $description
