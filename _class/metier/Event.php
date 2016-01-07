@@ -244,15 +244,16 @@ Class Event
 
     /**
      * Get all events "Open to registration"
+     * To force getAll without filter, turn $all to true
      * @return ModelEvent[]
      * @throws SQLErrorException
      * @throws UnknownErrorException
      */
-    public static function getAll()
+    public static function getAll($all = false)
     {
         try {
             $pdo = $GLOBALS["pdo"];
-            $sql = "SELECT * FROM ob_event WHERE open_to_registration = 1 AND cancelled != 1";
+            $sql = ($all ? "SELECT * FROM ob_event" : "SELECT * FROM ob_event WHERE open_to_registration = 1 AND cancelled != 1");
             $req = $pdo->prepare($sql);
             $req->execute();
             $req->setFetchMode(PDO::FETCH_OBJ);
@@ -538,6 +539,7 @@ Class Event
 
     /**
      * Set Event status and save it into database
+     * If event is cancelled, open_to_registration is turned to false
      * @param bool|true $cancelled
      * @throws SQLErrorException
      * @throws UnknownErrorException
@@ -546,7 +548,9 @@ Class Event
     {
         try {
             $this->cancelled = $cancelled;
-            $sql = "UPDATE ob_event SET cancelled = :cancelled WHERE id = :id";
+            $sql = "UPDATE ob_event SET cancelled = :cancelled"
+                    .($cancelled ? ", open_to_registration = 0 " : " " ).
+                    "WHERE id = :id";
             $req = $this->pdo->prepare($sql);
             $req->bindParam(":cancelled", $cancelled);
             $req->bindParam("id", $this->id);
