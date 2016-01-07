@@ -32,7 +32,7 @@ use OpenBooking\_Class\Metier\Event;
 //
 //
 $user = new Participant("elias@liwio.com", "2004");
-$event = new Event(3);
+$event = new Event(4);
 //
 Participation::add($user, $event);
 //$p = new Participation($user->getId(), 3);

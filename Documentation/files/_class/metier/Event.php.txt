@@ -245,6 +245,7 @@ Class Event
     /**
      * Get all events "Open to registration"
      * To force getAll without filter, turn $all to true
+     * @param boolean $all
      * @return ModelEvent[]
      * @throws SQLErrorException
      * @throws UnknownErrorException
