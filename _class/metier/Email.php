@@ -12,6 +12,7 @@
  */
 
 namespace OpenBooking\_Class\Metier;
+use OpenBooking\_Exceptions\UnknownEmailTemplateException;
 use \PDO;
 use \PDOException;
 use \Exception;
@@ -138,7 +139,7 @@ class Email{
      * 'participant_waiting_list_place_available',
      * 'event_modification'
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknownEmailTemplateException
      */
     private function getTemplate($type) {
         try {
@@ -158,7 +159,7 @@ class Email{
             $this->body = $res->body;
             $this->object = $res->object;
         }else{
-            throw new UnknownErrorException("Unknown type. Please correct it or create it.");
+            throw new UnknownEmailTemplateException();
         }
     }
 
