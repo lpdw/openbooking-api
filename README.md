@@ -25,30 +25,22 @@ Technos utilisés
 - [PHP Mailer 5.2](https://github.com/PHPMailer/PHPMailer/ "PHPMailer")
 
 
-### Les erreurs
+### La gestion des erreurs
 
-Un système de gestion des erreurs à été développé. Le fonctionnement : 
-Lorsque un methode de l'api est appellée, un json est retourné, se json contient entre 2 ou 3 infos en fonction du type de requete. 
+Un système de code d'erreurs à été mis en place afin de faciliter la compréhension des potentiels bugs par les développeurs utilisant l'api. 
 
-#####Les requetes POST
-Si une methode de l'api est de type POST (création d'objet), un json de ce type est retourné dans le cas ou aucune exception n'est levée et qu'aucune erreur apparait : 
+Voici la liste des exceptions, ainsi que leur code et leur description. 
 
-`{"code":0,"message":"Ok"}`
+- NullDatasException | -2 : Les données passées en paramètres sont null ou inéxistantes. 
+- LoginException | -3 : Login Fail
+- UnknowErrorException | -4 : Unknow Error
+- ValidDatasException | -5 : Valid datas : Format non valid (Exemple : Email non valide)
+- SQLErrorException | -6 : Sql Error
+- AccessDeniedException | -7 : Access Denied (Ex : Utilisateur ban qui ne peut donc pas s'inscrire à des events)
+- UnknowEmailTemplateException | -8 : Unknow Email template
+- DataAlreadyExistInDatabaseException | -9 : Duplicate db entry
+- EventIsCanceledException | -10 : Event is canceled 
 
-Le code d'erreur 0 signifie que tout est ok, si le code est différent de 0, il faut regarder le message pour plus d'infos. 
-
-Si le code est -1, il s'agit d'une erreur 'Custom'. 
-
-#####Les requetes GET
-Si une methode de l'api est de type GET (récupération d'objet), un json de ce type est retourné dans le cas ou aucune exception n'est levée et qu'aucune erreur apparait : 
-
-`{"code":0,"message":"Ok", "datas":"mes données"}`
-
-Le code d'erreur 0 signifie que tout est ok, si le code est différent de 0, il faut regarder le message pour plus d'infos. 
-
-Si le code est -1, il s'agit d'une erreur 'Custom'. 
-
-Dans le cas où, une erreur apparait, "datas" ne sera pas retourné. 
 
  
 
