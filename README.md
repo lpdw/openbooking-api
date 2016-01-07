@@ -2,7 +2,7 @@
 
 ![alt text][logo]
 
-[logo]: https://github.com/lpdw/openbooking-api/LOGO.png "Logo"
+[logo]: https://github.com/lpdw/openbooking-api/blob/dev/LOGO.png "Logo"
 
 
 API affiliated with the OpenBooking WordPress plugin (https://github.com/lpdw/openbooking)
