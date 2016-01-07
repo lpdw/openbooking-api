@@ -42,21 +42,8 @@ echo "|**   We will configure the database access and the   **| \n";
 echo "|**               email smtp server...                **| \n";
 echo "|*******************************************************| \n";
 
-echo "\nDo you use our wordpress plugin ? (y/n) ";
-$handle = fopen ("php://stdin","r");
-$line = fgets($handle);
-if(trim($line) != 'y'){
-    manualInstallation();
-} else {
-    echo "\nDo you want to use our wp-config file ? (y/n) ";
-    $handle = fopen ("php://stdin","r");
-    $line = fgets($handle);
-    if(trim($line) != 'y'){
-        manualInstallation();
-    } else {
-        WPInstallation();
-    }
-}
+manualInstallation();
+
 
 /**
  * Ask where is wp-config.php file
@@ -155,7 +142,7 @@ function manualInstallation(){
     );
     foreach($tmp AS $cat => $key){
 
-        echo "\nWhat is your ".$cat." ?\n"; // TODO : red
+        echo "\nWhat is your ".$cat." ?\n";
         $handle = fopen ("php://stdin","r");
         $line = fgets($handle);
         $neededDatas[$key['key']][$key['value']] = trim($line);
