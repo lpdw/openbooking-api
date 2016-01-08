@@ -192,7 +192,7 @@ Class Event
     {
         if (strlen(trim($name)) > 0
             && strlen(trim($localisation)) > 0
-            && strlen(trim($date)) > 0
+            && strlen(trim($date->format("Y-m-d H:i:s"))) > 0
             && strlen(trim($participants_max)) > 0
             && strlen(trim($organizer)) > 0
             && strlen(trim($organizer_email)) > 0
@@ -221,7 +221,7 @@ Class Event
                 $req->bindParam(':name', $name);
                 $req->bindParam(':description', $description);
                 $req->bindParam(':localisation', $localisation);
-                $req->bindParam(':date', $date);
+                $req->bindParam(':date', $date->format("Y-m-d H:i:s"));
                 $req->bindParam(':participants_max', $participants_max);
                 $req->bindParam(':organizer', $organizer);
                 $req->bindParam(':organizer_email', $organizer_email);
