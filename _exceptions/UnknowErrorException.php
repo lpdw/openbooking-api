@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Unknown email template Exception
+ * Unknow error Exception
  * Date: 05/01/2016
  * Project: OpenBooking
  * @copyright 2015 - 2016 OpenBooking Group
@@ -11,19 +11,19 @@ namespace OpenBooking\_Exceptions;
 use \Exception;
 
 /**
- * Class UnknowEmailTemplateException
+ * Class UnknowError
  * @package OpenBooking\Exceptions
  */
 
-class UnknowEmailTemplateException extends Exception
+class UnknowErrorException extends Exception
 {
     /**
-     * UnknownEmailTemplateException constructor.
+     * UnknowErrorException constructor.
      * @param string $message
      * @param int $code
      * @param Exception|null $previous
      */
-    public function __construct($message = "Specified template is unknown. Can't send email", $code = -8, Exception $previous = null) {
+    public function __construct($message = "Unknow error, please try again ", $code = -4, Exception $previous = null) {
         parent::__construct($message, $code, $previous);
     }
 
