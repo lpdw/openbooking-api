@@ -46,6 +46,9 @@ Then follow the insructions..
 >
 > \> MySQL user password
 
+When configuration is completed, get back to API's root repository, and run:
+> \> composer update
+
 //TODO: Ligne fichier cron
 
 
@@ -140,6 +143,9 @@ Ensuite, suivre les instructions..
 > What is your database password ?
 >
 > \> MySQL user password
+
+Une fois la configuration terminée, retourner à la racine du répertoire de l'API, et éxecuter:
+> \> composer update
 
 //TODO: Ligne fichier cron
 
