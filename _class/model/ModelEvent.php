@@ -11,6 +11,8 @@
 
 namespace OpenBooking\_Class\Model;
 
+use \DateTime;
+
 /**
  * Class ModelEvent
  * @package OpenBooking\_Class\Model
@@ -44,19 +46,19 @@ Class ModelEvent
 
     /**
      * Event date
-     * @var int $date DateTime
+     * @var DateTime $date
      */
     public $date;
 
     /**
      * Max participants allowed for the Event
-     * @var int
+     * @var int $participants_max
      */
     public $participants_max;
 
     /**
      * Event organizer
-     * @var string
+     * @var string $organizer
      */
     public $organizer;
 
@@ -68,7 +70,7 @@ Class ModelEvent
 
     /**
      * Event creation date
-     * @var int $creation_date Timestamp required
+     * @var DateTime $creation_date
      */
     public $creation_date;
 

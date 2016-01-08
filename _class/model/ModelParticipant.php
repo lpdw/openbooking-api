@@ -9,6 +9,8 @@
 
 namespace OpenBooking\_Class\Model;
 
+use \DateTime;
+
 /**
  * Class ModelParticipant
  * @package OpenBooking\_Class\Model
@@ -18,37 +20,37 @@ Class ModelParticipant{
     /**
      * Participant ID
      *
-     * @var int
+     * @var int $id
      */
     public $id;
 
     /**
      * Participant first name
-     * @var string
+     * @var string $first_name
      */
     public $first_name;
 
     /**
      * Participant last name
-     * @var string
+     * @var string $last_name
      */
     public $last_name;
 
     /**
      * Participant email
-     * @var string
+     * @var string $email
      */
     public $email;
 
     /**
      * Participant registration date
-     * @var DateTime
+     * @var DateTime $registration_date
      */
     public $registration_date;
 
     /**
      * Comments about participant
-     * @var string
+     * @var string $comments
      */
     public $comments;
 
@@ -57,7 +59,7 @@ Class ModelParticipant{
      *
      * If status == ban, user can connect but can't participate to an event. He need to contact an administrator.
      *
-     * @var string Possible values  : 'verified', 'unverified', 'ban'
+     * @var string $status Possible values  : 'verified', 'unverified', 'ban'
      */
     public $status;
 

@@ -49,8 +49,8 @@ Then follow the insructions..
 When configuration is completed, get back to API's root repository, and run:
 > \> composer update
 
-//TODO: Ligne fichier cron
-
+Finally, don't forget to put the following command into your cron file. It will manage reminder emails
+> 0 0 * * * /usr/bin/php LINK/TO/API/DIR/cron/cron.php >/dev/null 2>&1
 
 ## API functioning
 
@@ -147,7 +147,8 @@ Ensuite, suivre les instructions..
 Une fois la configuration terminée, retourner à la racine du répertoire de l'API, et éxecuter:
 > \> composer update
 
-//TODO: Ligne fichier cron
+Pour finir, n'oubliez pas d'insérer la commande qui suit dans votre fichier cron. C'est elle qui s'occupera des emails de rappel:
+> 0 0 * * * /usr/bin/php LINK/TO/API/DIR/cron/cron.php >/dev/null 2>&1
 
 ## Fonctionnement de l'API
 
