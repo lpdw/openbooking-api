@@ -21,7 +21,7 @@ use OpenBooking\_Exceptions\UnknowErrorException;
 use OpenBooking\_Exceptions\NullDatasException;
 use OpenBooking\_Exceptions\DataAlreadyExistInDatabaseException;
 
-require_once dirname(__FILE__) . "../../_include/bddConnect.php";
+require_once dirname(__FILE__) . "/../../_include/bddConnect.php";
 
 /**
  * Class EmailType
