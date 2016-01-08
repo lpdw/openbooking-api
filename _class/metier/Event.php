@@ -17,7 +17,7 @@ use \PDOException;
 use \Exception;
 use \DateTime;
 use OpenBooking\_Exceptions\NullDatasException;
-use OpenBooking\_Exceptions\UnknownErrorException;
+use OpenBooking\_Exceptions\UnknowErrorException;
 use OpenBooking\_Exceptions\SQLErrorException;
 use OpenBooking\_Exceptions\DataAlreadyExistInDatabaseException;
 use OpenBooking\_Class\Model\ModelEvent;
@@ -28,7 +28,7 @@ include_once dirname(__FILE__) . "/../model/ModelParticipant.php";
 include_once dirname(__FILE__) . "/../metier/Email.php";
 include_once dirname(__FILE__) . "/../../_exceptions/NullDatasException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/SQLErrorException.php";
-include_once dirname(__FILE__) . "/../../_exceptions/UnknownErrorException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/DataAlreadyExistInDatabaseException.php";
 
 require_once dirname(__FILE__) . "/../../_include/bddConnect.php";
@@ -115,7 +115,7 @@ Class Event
      * Event constructor.
      * @param int $id
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      */
     public function __construct($id)
     {
@@ -140,12 +140,12 @@ Class Event
                 $this->open_to_registration = $res->open_to_registration;
                 $this->cancelled = $res->cancelled;
             } else {
-                throw new UnknownErrorException("Unknown event");
+                throw new UnknowErrorException("Unknow event");
             }
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException($e->getMessage());
+            throw new UnknowErrorException($e->getMessage());
         }
     }
 
@@ -185,7 +185,7 @@ Class Event
      * @return mixed array
      * @throws NullDatasException
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      * @throws DataAlreadyExistInDatabaseException
      */
     public static function add($name, $description, $localisation, $date, $participants_max, $organizer, $organizer_email, $open_to_registration = true)
@@ -237,7 +237,7 @@ Class Event
                     throw new SQLErrorException($e->getMessage());
                 }
             } catch (Exception $e) {
-                throw new UnknownErrorException();
+                throw new UnknowErrorException();
             }
         } else {
             throw new NullDatasException("All fields must be filled");
@@ -252,7 +252,7 @@ Class Event
      * @param null|int $offset
      * @return ModelEvent[]
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      */
     public static function getAll($all = false, $limit = null, $offset = null)
     {
@@ -285,7 +285,7 @@ Class Event
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException();
+            throw new UnknowErrorException();
         }
     }
 
@@ -294,7 +294,7 @@ Class Event
      * @param DateTime $date
      * @return ModelEvent[]
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      */
     public static function getByDateTime(DateTime $date)
     {
@@ -334,7 +334,7 @@ Class Event
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException();
+            throw new UnknowErrorException();
         }
     }
 
@@ -351,7 +351,7 @@ Class Event
      * @return mixed array
      * @throws NullDatasException
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      */
     public function update($name, $description, $localisation, $date, $participants_max, $organizer, $organizer_email, $open_to_registration)
     {
@@ -396,7 +396,7 @@ Class Event
             } catch (PDOException $e) {
                 throw new SQLErrorException($e->getMessage());
             } catch (Exception $e) {
-                throw new UnknownErrorException();
+                throw new UnknowErrorException();
             }
         } else {
             throw new NullDatasException("All fields must be filled");
@@ -407,7 +407,7 @@ Class Event
      * Get all the Event participants
      * @return ModelParticipant[]
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      */
     public function getParticipants()
     {
@@ -439,7 +439,7 @@ Class Event
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException();
+            throw new UnknowErrorException();
         }
     }
 
@@ -448,7 +448,7 @@ Class Event
      * @param DateTime $cancelled_registration_date
      * @return ModelParticipant
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      */
     public function getNextRecipient(DateTime $cancelled_registration_date)
     {
@@ -490,7 +490,7 @@ Class Event
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException('tralala');
+            throw new UnknowErrorException('tralala');
         }
     }
 
@@ -598,7 +598,7 @@ Class Event
      * If event is cancelled, open_to_registration is turned to false
      * @param bool|true $cancelled
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      */
     public function setCancelled($cancelled = true)
     {
@@ -618,7 +618,7 @@ Class Event
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException();
+            throw new UnknowErrorException();
         }
     }
 }
