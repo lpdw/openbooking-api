@@ -11,11 +11,11 @@ namespace OpenBooking\_Exceptions;
 use \Exception;
 
 /**
- * Class UnknownEmailTemplateException
+ * Class UnknowEmailTemplateException
  * @package OpenBooking\Exceptions
  */
 
-class UnknownEmailTemplateException extends Exception
+class UnknowEmailTemplateException extends Exception
 {
     /**
      * UnknownEmailTemplateException constructor.
