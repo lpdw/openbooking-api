@@ -41,67 +41,67 @@ Class Event
 {
     /**
      * Event ID
-     * @var int
+     * @var int $id
      */
     private $id;
 
     /**
      * Event name
-     * @var string
+     * @var string $name
      */
     private $name;
 
     /**
      * Event description
-     * @var string
+     * @var string $description
      */
     private $description;
 
     /**
      * Event localisation
-     * @var string
+     * @var string $localisation
      */
     private $localisation;
 
     /**
      * Event date
-     * @var int DateTime required
+     * @var DateTime $date
      */
     private $date;
 
     /**
      * Max participants allowed for the Event
-     * @var int
+     * @var int $participant_max
      */
     private $participants_max;
 
     /**
      * Event organizer
-     * @var string
+     * @var string $organizer
      */
     private $organizer;
 
     /**
      * Email address of Event organizer
-     * @var string
+     * @var string $organizer_email
      */
     private $organizer_email;
 
     /**
      * Event creation date
-     * @var int DateTime required
+     * @var DateTime $creation_date
      */
     private $creation_date;
 
     /**
      * Event registrations status (1: opened or 0: closed)
-     * @var int
+     * @var int $open_to_registration
      */
     private $open_to_registration;
 
     /**
      * Event status (1: cancelled or 0: not cancelled)
-     * @var int
+     * @var int $cancelled
      */
     private $cancelled;
 
@@ -288,19 +288,26 @@ Class Event
     }
 
     /**
-     * Get all events which take place in less than $days days
-     * @param int $days
+     * Get all events which take place on given date
+     * @param DateTime $date
      * @return ModelEvent[]
      * @throws SQLErrorException
      * @throws UnknownErrorException
      */
-    public static function getByDaysLeft($days)
+    public static function getByDate(DateTime $date)
     {
         try {
             $pdo = $GLOBALS["pdo"];
-            $sql = "SELECT * FROM ob_event WHERE DATEDIFF(date, now())< :date AND cancelled !=1";
+            $sql = "SELECT *
+                    FROM ob_event
+                    WHERE date between
+                    STR_TO_DATE(CONCAT(:date, ' ', '00:00:00'), '%Y-%m-%d %H:%i:%s')
+                    AND
+                    STR_TO_DATE(CONCAT(:date, ' ', '23:59:59'), '%Y-%m-%d %H:%i:%s')
+                    AND cancelled !=1";
             $req = $pdo->prepare($sql);
-            $req->bindParam(":date", $days);
+            $date = $date->format('Y-m-d');
+            $req->bindParam(":date", $date);
             $req->execute();
             $req->setFetchMode(PDO::FETCH_OBJ);
             $rows = $req->fetchAll();
@@ -349,7 +356,7 @@ Class Event
         if (strlen(trim($name)) > 0
             && strlen(trim($description)) > 0
             && strlen(trim($localisation)) > 0
-            && strlen(trim($date)) > 0
+            && strlen(trim($date->format("Y-m-d H:i:s"))) > 0
             && strlen(trim($participants_max)) > 0
             && strlen(trim($organizer)) > 0
             && strlen(trim($organizer_email)) > 0
@@ -372,7 +379,7 @@ Class Event
                 $req->bindParam(':name', $name);
                 $req->bindParam(':description', $description);
                 $req->bindParam(':localisation', $localisation);
-                $req->bindParam(':date', $date);
+                $req->bindParam(':date', $date->format("Y-m-d H:i:s"));
                 $req->bindParam(':participants_max', $participants_max);
                 $req->bindParam(':organizer', $organizer);
                 $req->bindParam(':organizer_email', $organizer_email);
