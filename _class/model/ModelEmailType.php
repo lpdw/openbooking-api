@@ -11,6 +11,8 @@
 
 namespace OpenBooking\_Class\Model;
 
+use \DateTime;
+
 /**
  * Class ModelEmailType
  * @package OpenBooking\_Class\Model
@@ -20,7 +22,7 @@ Class ModelEmailType
 {
     /**
      * EmailType ID
-     * @var int
+     * @var int $id
      */
     public $id;
 
@@ -34,25 +36,25 @@ Class ModelEmailType
      * 'event_annulation',
      * 'participant_waiting_list_place_available',
      * 'event_modification'
-     * @var string
+     * @var string $type
      */
     public $type;
 
     /**
      * EmailType object
-     * @var string
+     * @var string $object
      */
     public $object;
 
     /**
      * EmailType body
-     * @var string
+     * @var string $body
      */
     public $body;
 
     /**
      * EmailType last edit date
-     * @var DateTime
+     * @var DateTime $last_edit
      */
     public $last_edit;
 }

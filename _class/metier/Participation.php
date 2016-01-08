@@ -268,9 +268,8 @@ class Participation
             $email = new Email();
             $email->prepareAndSendEmail("participant_annulation", array($this->participant->get()), $this->event);
 
-            if(($this->event->getNextRecipient(new DateTime($this->registration_date)) != false)
+            if(($nextRecipient = $this->event->getNextRecipient(new DateTime($this->registration_date)) != false)
                 && count($this->event->getParticipants()) >= $this->event->getParticipantsMax()){
-                $nextRecipient = $this->event->getNextRecipient(new DateTime($this->registration_date));
                 $email->prepareAndSendEmail("participant_waiting_list_place_available", array($nextRecipient), $this->event);
             }
         } catch (PDOException $e) {

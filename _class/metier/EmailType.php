@@ -31,7 +31,7 @@ Class EmailType
 {
     /**
      * EmailType ID
-     * @var int
+     * @var int $id
      */
     private $id;
 
@@ -45,25 +45,25 @@ Class EmailType
      * 'event_annulation',
      * 'participant_waiting_list_place_available',
      * 'event_modification'
-     * @var string
+     * @var string $type
      */
     private $type;
 
     /**
      * EmailType object
-     * @var string
+     * @var string $object
      */
     private $object;
 
     /**
      * EmailType body
-     * @var string
+     * @var string $body
      */
     private $body;
 
     /**
      * EmailType last edit date
-     * @var DateTime
+     * @var DateTime $last_edit
      */
     private $last_edit;
 
