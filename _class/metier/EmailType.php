@@ -11,6 +11,8 @@
  *
  */
 
+//Todo : Ajouter templates par défaut
+
 namespace OpenBooking\_Class\Metier;
 use \PDO;
 use \Exception;
