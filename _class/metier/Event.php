@@ -298,7 +298,7 @@ Class Event
     {
         try {
             $pdo = $GLOBALS["pdo"];
-            $sql = "SELECT * FROM ob_event WHERE DATEDIFF(date, now())< :date AND cancelled !=1";
+            $sql = "SELECT * FROM ob_event WHERE DATEDIFF(date, now())< :date AND cancelled = 0";
             $req = $pdo->prepare($sql);
             $req->bindParam(":date", $days);
             $req->execute();
