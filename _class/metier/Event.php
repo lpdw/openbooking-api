@@ -248,6 +248,8 @@ Class Event
      * Get all events "Open to registration"
      * To force getAll without filter, turn $all to true
      * @param boolean $all
+     * @param null|int $limit
+     * @param null|int $offset
      * @return ModelEvent[]
      * @throws SQLErrorException
      * @throws UnknownErrorException
@@ -294,7 +296,7 @@ Class Event
      * @throws SQLErrorException
      * @throws UnknownErrorException
      */
-    public static function getByDate(DateTime $date)
+    public static function getByDateTime(DateTime $date)
     {
         try {
             $pdo = $GLOBALS["pdo"];

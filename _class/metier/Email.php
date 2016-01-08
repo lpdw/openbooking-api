@@ -12,18 +12,21 @@
  */
 
 namespace OpenBooking\_Class\Metier;
-use OpenBooking\_Exceptions\UnknownEmailTemplateException;
 use \PDO;
 use \PDOException;
 use \Exception;
 use OpenBooking\_Exceptions\SQLErrorException;
-use OpenBooking\_Exceptions\UnknownErrorException;
+use OpenBooking\_Exceptions\UnknowEmailTemplateException;
+use OpenBooking\_Exceptions\UnknowErrorException;
 use OpenBooking\_Class\Model\ModelParticipant;
 use PHPMailer;
 
 require dirname(__FILE__).'/../../vendor/autoload.php';
 
 require_once dirname(__FILE__) . "/../../_include/bddConnect.php";
+require_once dirname(__FILE__) . "/../../_exceptions/UnknowEmailTemplateException.php";
+require_once dirname(__FILE__) . "/../../_exceptions/SQLErrorException.php";
+require_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
 
 /**
  * Class Email
@@ -141,7 +144,8 @@ class Email{
      * 'participant_waiting_list_place_available',
      * 'event_modification'
      * @throws SQLErrorException
-     * @throws UnknownEmailTemplateException
+     * @throws UnknowErrorException
+     * @throws UnknowEmailTemplateException
      */
     private function getTemplate($type) {
         try {
@@ -155,13 +159,13 @@ class Email{
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException();
+            throw new UnknowErrorException();
         }
         if(isset($res->body) && !empty($res->body)){
             $this->body = $res->body;
             $this->object = $res->object;
         }else{
-            throw new UnknownEmailTemplateException();
+            throw new UnknowEmailTemplateException();
         }
     }
 
@@ -207,7 +211,7 @@ class Email{
      * @param string $toName
      * @param string $object
      * @param string $body
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      * @throws \phpmailerException
      */
     private function send($to, $toName, $object, $body){
@@ -228,7 +232,7 @@ class Email{
         $mail->Body    = $body;
 
         if(!$mail->send()) {
-            throw new UnknownErrorException("Cannot send email");
+            throw new UnknowErrorException("Cannot send email");
         }
     }
 }

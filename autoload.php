@@ -1,12 +1,19 @@
 <?php
 /**
  * Autoload file.
+ *
  * @version 1.0
  * @author Elias Cédric Laouiti
  * @author Maxime Florile
  * Date: 04/01/2016
  * Project: OpenBooking
  * @copyright 2015 - 2016 OpenBooking Group
+ */
+
+/**
+ *
+ * Automatically load required classes
+ *
  */
 
 require_once dirname(__FILE__)."/_class/metier/Participant.php";
