@@ -203,11 +203,13 @@ function write_ini_file($assoc_arr) {
         $success = fwrite($handle, $content);
         fclose($handle);
         if($success){
-            echo "\e[1;32m\nInstallation is complete. Enjoy! \n\e[0m";
+            echo "\e[1;32m\nTo finish the installation, \n\e[0m";
+            echo "\e[1;32m\n Edit crontab and paste \"0 0 * * * /usr/bin/php LINK/TO/API/DIR/cron/cron.php >/dev/null 2>&1\" \n\e[0m";
+            echo "\e[1;32m\nEnjoy ! \n\n\e[0m";
             return true;
         }
     }
-    echo "\e[1;31m\nI can't write conf.ini file. Can you paste this into conf.ini file :\n\e[0m";
+    echo "\e[1;31m\nI can't write conf.ini file. Can you paste this into conf.ini file :\n\n\e[0m";
     echo $content;
     return false;
 }
