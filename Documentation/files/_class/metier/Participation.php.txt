@@ -17,7 +17,7 @@ use \Exception;
 use \DateTime;
 use OpenBooking\_Exceptions\AccessDeniedException;
 use OpenBooking\_Exceptions\SQLErrorException;
-use OpenBooking\_Exceptions\UnknownErrorException;
+use OpenBooking\_Exceptions\UnknowErrorException;
 use OpenBooking\_Exceptions\ValidDatasException;
 use OpenBooking\_Exceptions\DataAlreadyExistInDatabaseException;
 use OpenBooking\_Exceptions\EventIscancelledException;
@@ -26,10 +26,12 @@ use OpenBooking\_Class\Model\ModelParticipant;
 
 include_once dirname(__FILE__) . "/../../_exceptions/AccessDeniedException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/SQLErrorException.php";
-include_once dirname(__FILE__) . "/../../_exceptions/UnknownErrorException.php";
+include_once dirname(__FILE__) . "/../../_exceptions/UnknowErrorException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/ValidDatasException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/EventIscancelledException.php";
 include_once dirname(__FILE__) . "/../../_exceptions/DataAlreadyExistInDatabaseException.php";
+
+require_once dirname(__FILE__) . "/../../_include/bddConnect.php";
 
 /**
  * Class Participation
@@ -106,7 +108,7 @@ class Participation
      * @param Event $event
      * @throws AccessDeniedException
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      */
     public function __construct(Participant $participant, Event $event)
     {
@@ -141,7 +143,7 @@ class Participation
         } catch (AccessDeniedException $e) {
             throw new AccessDeniedException();
         } catch (Exception $e) {
-            throw new UnknownErrorException();
+            throw new UnknowErrorException();
         }
     }
 
@@ -205,7 +207,7 @@ class Participation
      *
      * @param bool|true $present
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      * @throws ValidDatasException
      */
     public function setPresent($present = true)
@@ -224,7 +226,7 @@ class Participation
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException();
+            throw new UnknowErrorException();
         }
     }
 
@@ -247,7 +249,7 @@ class Participation
      * If there is a waiting list, an email is sent to the next recipient
      * @param bool|true $cancelled
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      * @throws ValidDatasException
      */
     public function setCancelled($cancelled = true)
@@ -274,7 +276,7 @@ class Participation
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException($e->getMessage());
+            throw new UnknowErrorException($e->getMessage());
         }
     }
 
@@ -292,7 +294,7 @@ class Participation
      * @param string $comments
      *
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      */
     public function setComments($comments)
     {
@@ -306,7 +308,7 @@ class Participation
         } catch (PDOException $e) {
             throw new SQLErrorException($e->getMessage());
         } catch (Exception $e) {
-            throw new UnknownErrorException();
+            throw new UnknowErrorException();
         }
     }
 
@@ -321,7 +323,7 @@ class Participation
      * @return array
      * @throws AccessDeniedException
      * @throws SQLErrorException
-     * @throws UnknownErrorException
+     * @throws UnknowErrorException
      * @throws EventIscancelledException
      * @throws DataAlreadyExistInDatabaseException
      */
@@ -351,7 +353,7 @@ class Participation
                 }
                 return array("code" => 0, "message" => "ok");
             } else {
-                throw new UnknownErrorException();
+                throw new UnknowErrorException();
             }
         } catch (PDOException $e) {
             if($e->getCode() == 23000){
@@ -360,7 +362,7 @@ class Participation
                 throw new SQLErrorException($e->getMessage());
             }
         } catch (Exception $e) {
-            throw new UnknownErrorException();
+            throw new UnknowErrorException();
         }
     }
 
